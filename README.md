@@ -3,7 +3,7 @@
 ### How to Install "Icons"
 
 You can find a brief description on the
- [`share`](https://github.com/eternalbits/icons/tree/master/share/) page.
+ [`share`](https://github.com/eternalbits/icons/tree/main/share/) page.
  Currently only command line input is available, but I rely on this to
  project a screen similar to that of CompactVD.
 
