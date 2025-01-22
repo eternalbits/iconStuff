@@ -3,14 +3,14 @@
 ### How to Install "Icons"
 
 You can find a brief description on the
- [`share`](https://github.com/eternalbits/icons/tree/main/share/) page.
+ [`share`](https://github.com/eternalbits/iconStuff/tree/main/share/) page.
  Currently only command line input is available, but I rely on this to
  project a screen similar to that of CompactVD.
 
 ### What is "Icons"?
 
 "Icons" is primarily a version that allows you to translate from [Microsoft Windows
- ICO](https://en.wikipedia.org/wiki/ICO_(file_format)) to [Apple Macintosh
+ ICO](https://en.wikipedia.org/wiki/ICO_(file_format)) to [Apple macOS
  ICNS](https://en.wikipedia.org/wiki/Apple_Icon_Image_format) and vice versa.
  Currently it only has one version that translates the icons to PNG, as both
  functions have this tool.

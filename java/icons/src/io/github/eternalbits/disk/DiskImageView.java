@@ -26,15 +26,16 @@ import java.util.List;
  */
 public class DiskImageView {
 	
-	public final String filePath;					// 
-	public final String fileType;					// 
-	public final long fileLength;					// 
+	public final String filePath;					// Converts this abstract pathname into a pathname string.
+	public final String fileType;					// Access type: ICNS (Apple), ICO (Microsoft) or PNG (Boutell).
+	public final long fileLength;					// The length of the image file, in bytes. Information is purely informative.
 	
-	public final List<DiskIconsView> fileIcons;		// 
+	public final List<DiskIconsView> fileIcons;		// Represents the structure of an icon through repeated DiskIconsView input.
 	
 	/**
+	 * Outputs --dump to a file as described in {@link DiskImageView}.
 	 * 
-	 * <p>
+	 * @param image	The disk image to be created.
 	 */
 	DiskImageView(DiskIcons image) {
 		filePath 		= image.path;

@@ -17,23 +17,16 @@
 package io.github.eternalbits.disk;
 
 /**
- * A read-only view of a {@link DiskFileSystem}. All fields are public.
+ * A read-only view of a {@link DiskImageView}. All fields are public.
  * <p>
  */
 public class DiskIconsView {
 	
-	public boolean	isPng;						// 
-	public int		offset;						// 
-	public int		length;						// 
-	public String	type;						// 
-	public String	description;				// 
+	public int		isIcon;						// This is the type of icon that goes from NOT_AN_ICON to ICON_ARGB
+	public int		offset;						// The offset goes from the beginning of the file to the beginning of the icon
+	public int		length;						// Icon length, in bytes
+	public String	type;						// The type can be PNG, ICO or a character set from the Apple Macintosh
+	public String	description;				// A brief description of the icon for the viewer
+	public String	layout;						// A detailed description for programming 
 	
-	public DiskIconsView() {
-		isPng			= false;
-		offset 			= 0;
-		length 			= 0;
-		type			= null;
-		description 	= null;
-	}
-
 }

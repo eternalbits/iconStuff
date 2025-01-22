@@ -26,9 +26,10 @@ import java.util.zip.CRC32;
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.disk.WrongHeaderException;
+import io.github.eternalbits.icons.Static;
 
 /**
- * 
+ * PNG File Routine
  * <p>
  */
 public
@@ -41,26 +42,28 @@ class PngHeader {
 	int		dosUnix;				// A style line ending, must be 0x0D, 0x0A, 0x1A, 0x0A
 	
 	/**
+	 * PNG file writing routine.
 	 * 
-	 * <p>
+	 * @param png	PNG file access.
+	 * @param in	Access to DiskIconsView which is a preview of another result.
 	 */
 	PngHeader(PngFiles png, DiskIcons image) throws IOException {
 		if (image.getFiles() == null) return;
 		
 		/**
-		 * 
+		 * Start by choosing the largest PNG
 		 */
 		DiskIconsView es = null;
 		int i = 0, m = 0;
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isPng) {
-				i = Integer.parseInt("0"+fs.description.replaceAll("[^0-9]", ""));
+			if (fs.isIcon == DiskIcons.ICON_PNG) {
+				i = Static.getInteger(fs.description);
 				if (i > m) { es = fs; m = i; }
 			}
 		}
 		
 		/**
-		 * 
+		 * If you find any, write them down
 		 */
 		if (es != null) {
 			RandomAccessFile from = image.getMedia();
@@ -70,8 +73,10 @@ class PngHeader {
 	}
 	
 	/**
+	 * PNG file reading routine.
 	 * 
-	 * <p>
+	 * @param png	PNG file access.
+	 * @param in	Access to the first 8 characters.
 	 */
 	PngHeader(PngFiles png, ByteBuffer in) throws IOException, WrongHeaderException {
 		
@@ -83,11 +88,12 @@ class PngHeader {
 			
 			if (signature == PngFiles.ICON_PGN && dosUnix == PngFiles.DOS_UNIX) { // %PNG....
 				DiskIconsView view = new DiskIconsView();
-				view.isPng = true;
+				view.isIcon = DiskIcons.ICON_PNG;
 				view.offset = 0;
-				view.length = (int)png.getLength();
+				view.length = (int) png.getLength();
 				view.type = png.getType();
 				view.description = this.ImageHeader(png, HEADER_SIZE, png.getLength());
+				view.layout = view.description;
 				disk.add(view);
 				return;
 			}
@@ -104,8 +110,12 @@ class PngHeader {
 	public PngHeader() {}
 	
 	/**
+	 * This routine checks if PNG is true and can be called by the 3 routines.
 	 * 
-	 * <p>
+	 * @param img	Access to each of the 3 routines: ICO, ICNS and PNG.
+	 * @param offset	The reading position.
+	 * @param size	Number of bytes to be passed.
+	 * @return	String representing what was read, something like "256 PNG".
 	 */
 	public String ImageHeader(DiskIcons img, long offset, long size) throws IOException, WrongHeaderException {
 		
@@ -159,8 +169,12 @@ class PngHeader {
 	}
 	
 	/**
+	 * This routine is limited to passing PNG bytes from one side to the other.
 	 * 
-	 * <p>
+	 * @param from	Read access to RandomAccessFile.
+	 * @param original	The reading position.
+	 * @param to	RandomAccessFile write access.
+	 * @param size	Number of bytes to be passed.
 	 */
 	public void WriteImage(RandomAccessFile from, int original, RandomAccessFile to, int size) throws IOException {
 		byte[] buffer = new byte[8];

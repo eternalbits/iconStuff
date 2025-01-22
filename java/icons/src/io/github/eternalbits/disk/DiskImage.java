@@ -25,7 +25,7 @@ import io.github.eternalbits.ico.IcoFiles;
 import io.github.eternalbits.png.PngFiles;
 
 /**
- * 
+ * Represents reading and writing DiskIcons.
  * <p>
  */
 public class DiskImage {
@@ -34,8 +34,10 @@ public class DiskImage {
 	private static String UNKNOWN_TYPE = "Unknown disk image type";
 
 	/**
+	 * Reading DiskIcons.
 	 * 
-	 * <p>
+	 * @param path/file	String/path you want to access DiskIcons.
+	 * @param mode	Access type: "r" for read or "rw" for both.
 	 */
 	public static DiskIcons open(String path, String mode) throws IOException {
 		return open(new File(path), mode);
@@ -60,8 +62,11 @@ public class DiskImage {
 	}
 
 	/**
+	 * Writing DiskIcons.
 	 * 
-	 * <p>
+	 * @param type	Access type: icns, ico or png.
+	 * @param path/file	String/path you want to read from DiskIcons.
+	 * @param image	The disk image to be created.
 	 */
 	public static DiskIcons create(String type, String path, DiskIcons image) throws IOException {
 		return create(type, new File(path), image);

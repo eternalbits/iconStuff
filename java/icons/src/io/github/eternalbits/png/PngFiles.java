@@ -34,24 +34,26 @@ import io.github.eternalbits.disk.WrongHeaderException;
  */
 public class PngFiles extends DiskIcons {
 	static final ByteOrder BYTE_ORDER = ByteOrder.BIG_ENDIAN;
-	public static final int ICON_PGN = 0x89504E47;		// %PNG
-	public static final int DOS_UNIX = 0x0D0A1A0A;		// ....
+	public static final int ICON_PGN = 0x89504E47;		// "%PNG"
+	public static final int DOS_UNIX = 0x0D0A1A0A;		// "...."
 	
 	final PngHeader header;
 	
 	/**
+	 * PNG file writing routine.
 	 * 
-	 * <p>
+	 * @param file	Write access to PNG file.
+	 * @param image	Abstract class that represents a disk icon.
 	 */
 	public PngFiles(File file, DiskIcons image) throws IOException {
 		media = new RandomAccessFile(file, "rw");
 		try { // Always close media on Exception
 			media.setLength(0);
 			path = file.getPath();
-			readOnly = false;
 			setType();
 			
 			header = new PngHeader(this, image);
+			length = file.length();
 		}
 		catch (Exception e) {
 			media.close();
@@ -60,13 +62,14 @@ public class PngFiles extends DiskIcons {
 	}
 	
 	/**
+	 * PNG file reading routine.
 	 * 
-	 * <p>
+	 * @param file	Read access to PNG file.
+	 * @param mode	String meaning file access.
 	 */
 	public PngFiles(File file, String mode) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, mode);
 		try { // Always close media on Exception
-			readOnly = mode.equals("r");
 			path = file.getPath();
 			length = file.length();
 			setType();

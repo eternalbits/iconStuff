@@ -34,23 +34,25 @@ import io.github.eternalbits.disk.WrongHeaderException;
  */
 public class IcoFiles extends DiskIcons {
 	static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
-	public static final int ICON_ICO = 0x00000100;	// ....
+	public static final int ICON_ICO = 0x00000100;	// "...."
 	
 	final IcoHeader header;
 	
 	/**
+	 * ICO file writing routine.
 	 * 
-	 * <p>
+	 * @param file	Write access to ICO file.
+	 * @param image	Abstract class that represents a disk icon.
 	 */
 	public IcoFiles(File file, DiskIcons image) throws IOException {
 		media = new RandomAccessFile(file, "rw");
 		try { // Always close media on Exception
 			media.setLength(0);
 			path = file.getPath();
-			readOnly = false;
 			setType();
 			
 			header = new IcoHeader(this, image);
+			length = file.length();
 		}
 		catch (Exception e) {
 			media.close();
@@ -59,13 +61,14 @@ public class IcoFiles extends DiskIcons {
 	}
 	
 	/**
+	 * ICO file reading routine.
 	 * 
-	 * <p>
+	 * @param file	Read access to ICO file.
+	 * @param mode	String meaning file access.
 	 */
 	public IcoFiles(File file, String mode) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, mode);
 		try { // Always close media on Exception
-			readOnly = mode.equals("r");
 			path = file.getPath();
 			length = file.length();
 			setType();

@@ -19,7 +19,7 @@ package io.github.eternalbits.disk;
 import java.io.IOException;
 
 /**
- * 
+ * This exception is thrown by an object when there are problems reading the file.
  */
 public class InitializationException extends IOException {
 	private static final long serialVersionUID = 8905233065966537122L;

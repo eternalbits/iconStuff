@@ -37,10 +37,12 @@ import org.apache.commons.cli.ParseException;
 
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskImage;
+import io.github.eternalbits.disk.DiskImageView;
 import io.github.eternalbits.icons.gui.FrontEnd;
 
 /**
- * 
+ * Convert ICO and ICNS disk images line interface. Without parameters
+ * the GUI takes precedence, use {@code --help} to get the command list.
  * <p>
  */
 public class Icons {
@@ -49,8 +51,9 @@ public class Icons {
 	private final static String IMAGE_NOT_CREATED = "No icons were created.";
 	
 	/**
+	 * Outputs --dump to a file as described in {@link DiskImageView}.
 	 * 
-	 * <p>
+	 * @param file	File we want to get a --dump of.
 	 */
 	private void showView(File file) throws IOException {
 		try (DiskIcons image = DiskImage.open(file, "r")) {
@@ -59,8 +62,11 @@ public class Icons {
 	}
 	
 	/**
+	 * Copies a file (ICO, ICNS or PNG) to another file, replacing everything.
 	 * 
-	 * <p>
+	 * @param from	File to be copied.
+	 * @param to	File we want to overlay.
+	 * @param type	Extension type: ico, icns or png.
 	 */
 	private void copy(File from, File to, String type) throws IOException {
 		File copy = null;
@@ -91,8 +97,9 @@ public class Icons {
 			.getCodeSource().getLocation().getPath()).getName();
 
 	/**
+	 * Java main method. Here it all begins!
 	 * 
-	 * <p>
+	 * @param args	Parameters as described in --help.
 	 */
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0 && !GraphicsEnvironment.isHeadless()) {
@@ -111,8 +118,7 @@ public class Icons {
 	}
 
 	/**
-	 * 
-	 * <p>
+	 * Parameter descriptions.
 	 */
 	private static Options buildHelpers() {
 		Options helpers = new Options();
@@ -135,8 +141,11 @@ public class Icons {
 	}
 	
 	/**
+	 * The cmd command accepts only one opt line.
 	 * 
-	 * <p>
+	 * @param cmd	Command line.
+	 * @param opt	Like "c" or "copy".
+	 * @return	File pointed to by opt.
 	 */
 	private File getOptionValues(CommandLine cmd, String opt) throws ParseException {
 		if (cmd.getOptionValues(opt).length != 1)
@@ -144,6 +153,11 @@ public class Icons {
 		return new File(cmd.getOptionValue(opt));
 	}
 	
+	/**
+	 * The program was called with parameters.
+	 * 
+	 * @param args	Parameters as described in --help.
+	 */
 	private void commandLine(String[] args) {
 		
 		Options options = buildOptions();
@@ -227,8 +241,7 @@ public class Icons {
 	}
 
 	/**
-	 * 
-	 * <p>
+	 * Called with "--version" or "--help" parameters.
 	 */
 	private static void printAbout() {
 		System.out.println("Icons version "+version+" copyright 2024"+year+" Rui Baptista");
@@ -246,8 +259,9 @@ public class Icons {
 	}
 	
 	/**
+	 * Outputs --dump to a file as described in {@link DiskImageView}.
 	 * 
-	 * <p>
+	 * @param obj	Output object.
 	 */
 	public static void dump(Object obj) { dump(obj, ""); }
 	private static void dump(Object obj, String in) {

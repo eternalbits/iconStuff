@@ -34,23 +34,28 @@ import io.github.eternalbits.disk.WrongHeaderException;
  */
 public class IcnsFiles extends DiskIcons {
 	static final ByteOrder BYTE_ORDER = ByteOrder.BIG_ENDIAN;
-	public static final int ICON_ICNS = 0x69636e73;	// icns
+	public static final int ICON_ICNS = 0x69636e73;	// "icns"
 	
-	final IcnsHeader header;
+	static final int ICON_JPEG = 0x6a502020;		// "jP  "
+	static final int ICON_ARGB = 0x41524742;		// "ARGB"
+	
+	final IcnsHeader header;						
 	
 	/**
+	 * ICNS file writing routine.
 	 * 
-	 * <p>
+	 * @param file	Write access to ICNS file.
+	 * @param image	Abstract class that represents a disk icon.
 	 */
 	public IcnsFiles(File file, DiskIcons image) throws IOException {
 		media = new RandomAccessFile(file, "rw");
 		try { // Always close media on Exception
 			media.setLength(0);
 			path = file.getPath();
-			readOnly = false;
 			setType();
 			
 			header = new IcnsHeader(this, image);
+			length = file.length();			
 		}
 		catch (Exception e) {
 			media.close();
@@ -59,13 +64,14 @@ public class IcnsFiles extends DiskIcons {
 	}
 	
 	/**
+	 * ICNS file reading routine.
 	 * 
-	 * <p>
+	 * @param file	Read access to ICNS file.
+	 * @param mode	String meaning file access.
 	 */
 	public IcnsFiles(File file, String mode) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, mode);
 		try { // Always close media on Exception
-			readOnly = mode.equals("r");
 			path = file.getPath();
 			length = file.length();
 			setType();
