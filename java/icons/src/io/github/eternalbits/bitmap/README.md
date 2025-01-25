@@ -1,4 +1,4 @@
-# ICO - As seen by Windows Microsoft
+# ICO - As seen by Microsoft Windows
 
 ICO is a format developed by Microsoft that groups several icons, initially rectangular, 
 in the same format. The file format consists of a 6-byte header, followed by any number 
@@ -21,7 +21,10 @@ of 16-byte image entries.
 | 8 | 4 | Specifies the size of the image's data in bytes. |
 | 12 | 4 | Specifies the offset of BMP or PNG data from the beginning of the ICO file. |
 
-
+Then comes the design of the icons. Up until Windows XP, they all had to be bitmapped, 
+if I'm not mistaken, with triple RGB followed by an alpha sample. Starting with Windows 
+Vista, they can also be of type PNG and the bitmap can have RGBA, with Windows XP 
+keeping the old alpha sample.
 ### Bitmap information header
 | Offset | Size | Purpose |
 | ------ | ---- | ------- |
@@ -36,3 +39,20 @@ of 16-byte image entries.
 | 28 | 4 | The vertical resolution of the image. |
 | 32 | 4 | The number of colors in the color palette (must be 0). |
 | 36 | 4 | The number of important colors used (must be 0). |
+Two things are noticeable:
+- Doubling the height. This is actually due to the duplication of Windows 
+XP, although they have nothing to do with each other in terms of size.
+- Height "doubling" remains outside of Windows XP, bits can be reset, 
+but it costs little to fill them.
+
+As for the PNG, it is easy to determine its height, since the IHDR must be the first block.
+### PNG - IHDR first chunk
+| Offset | Size | Purpose |
+| ------ | ---- | ------- |
+| 0 | 4 | Width in pixels. |
+| 4 | 4 | Height in pixels. |
+| 8 | 1 | Bit depth (1, 2, 4, 8 or 16) |
+| 9 | 1 | Color type (0, 2, 3, 4 or 6) |
+| 10 | 1 | Compression method (must be 0) |
+| 11 | 1 | Filter method (must be 0) |
+| 12 | 1 | Interlace method (0 or 1) |

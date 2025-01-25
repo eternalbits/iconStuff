@@ -2,27 +2,24 @@
 
 ### How to Install "Icons"
 
-You can find a brief description on the
- [`share`](https://github.com/eternalbits/iconStuff/tree/main/share/) page.
- Currently only command line input is available, but I rely on this to
- project a screen similar to that of CompactVD.
+You can find a brief description on the [`share`](https://github.com/eternalbits/iconStuff/tree/main/share/) 
+page. Currently only command line input is available, but I rely on this to project 
+a screen similar to that of CompactVD.
 
 ### What is "Icons"?
 
 "Icons" is primarily a version that allows you to translate from [Microsoft Windows
- ICO](https://en.wikipedia.org/wiki/ICO_(file_format)) to [Apple macOS
- ICNS](https://en.wikipedia.org/wiki/Apple_Icon_Image_format) and vice versa.
- Currently it only has one version that translates the icons to PNG, as both
- functions have this tool.
+ICO](https://en.wikipedia.org/wiki/ICO_(file_format)) to [Apple macOS
+ICNS](https://en.wikipedia.org/wiki/Apple_Icon_Image_format) and vice versa.
+Currently, there are only two versions that translate icons to PNG, as both 
+functions have this tool, and a version that translates between [`Apple's 
+compression`](https://github.com/eternalbits/iconStuff/tree/main/java/icons/src/io/github/eternalbits/apple/) 
+and [`Microsoft's bitmap`](https://github.com/eternalbits/iconStuff/tree/main/java/icons/src/io/github/eternalbits/bitmap/).
 
 Both files can be viewed with the [XnView MP](https://www.xnview.com/en/xnviewmp/)
  tool.
 
 ### Future advancements of "Icons":
-
-- Add some comments to the tool.
-- Translation between the old bitmap, present in Windows, and is32+s8mk, present
- in Macintosh.
 - Adding a window.
 
 ### Copyright Notices
