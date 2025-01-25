@@ -12,7 +12,7 @@ a screen similar to that of CompactVD.
 ICO](https://en.wikipedia.org/wiki/ICO_(file_format)) to [Apple macOS
 ICNS](https://en.wikipedia.org/wiki/Apple_Icon_Image_format) and vice versa.
 Currently, there are only two versions that translate icons to PNG, as both 
-functions have this tool, and a version that translates between [`Apple's 
+functions have this tool, and a version that translates between [`Apple's
 compression`](https://github.com/eternalbits/iconStuff/tree/main/java/icons/src/io/github/eternalbits/apple/) 
 and [`Microsoft's bitmap`](https://github.com/eternalbits/iconStuff/tree/main/java/icons/src/io/github/eternalbits/bitmap/).
 

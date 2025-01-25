@@ -39,10 +39,11 @@ keeping the old alpha sample.
 | 28 | 4 | The vertical resolution of the image. |
 | 32 | 4 | The number of colors in the color palette (must be 0). |
 | 36 | 4 | The number of important colors used (must be 0). |
+
 Two things are noticeable:
 - Doubling the height. This is actually due to the duplication of Windows 
 XP, although they have nothing to do with each other in terms of size.
-- Height "doubling" remains outside of Windows XP, bits can be reset, 
+- Height "doubling" remains outside of Windows XP. Bits can be reset, 
 but it costs little to fill them.
 
 As for the PNG, it is easy to determine its height, since the IHDR must be the first block.
