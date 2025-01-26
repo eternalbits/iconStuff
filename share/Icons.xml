@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Program Files\Icons\Icons.jar</jar>
-  <outfile>C:\Program Files\Icons\Icons.exe</outfile>
+  <jar>C:\Program Files\IconStuff\Icons.jar</jar>
+  <outfile>C:\Program Files\IconStuff\Icons.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Program Files\Icons\Icons.ico</icon>
+  <icon>C:\Program Files\IconStuff\Icons.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
@@ -24,12 +24,12 @@
     <runtimeBits>64/32</runtimeBits>
   </jre>
   <versionInfo>
-    <fileVersion>1.0.0.0</fileVersion>
-    <txtFileVersion>1.0.0.0</txtFileVersion>
+    <fileVersion>1.1.0.0</fileVersion>
+    <txtFileVersion>1.1.0.0</txtFileVersion>
     <fileDescription>Convert ICO and ICNS disk images</fileDescription>
-    <copyright>Copyright © 2024 Rui Baptista</copyright>
-    <productVersion>1.0.0.0</productVersion>
-    <txtProductVersion>1.0.0.0</txtProductVersion>
+    <copyright>Copyright © 2024-2025 Rui Baptista</copyright>
+    <productVersion>1.1.0.0</productVersion>
+    <txtProductVersion>1.1.0.0</txtProductVersion>
     <productName>Icons</productName>
     <companyName></companyName>
     <internalName>Rui Baptista</internalName>
