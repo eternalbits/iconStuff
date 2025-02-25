@@ -68,20 +68,20 @@ public class DiskImage {
 	 * @param path/file	String/path you want to read from DiskIcons.
 	 * @param image	The disk image to be created.
 	 */
-	public static DiskIcons create(String type, String path, DiskIcons image) throws IOException {
-		return create(type, new File(path), image);
+	public static DiskIcons create(String type, String path, DiskIcons image, String icon) throws IOException, WrongHeaderException {
+		return create(type, new File(path), image, icon);
 	}
 
-	public static DiskIcons create(String type, File file, DiskIcons image) throws IOException {
+	public static DiskIcons create(String type, File file, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		
 		if ("icns".equalsIgnoreCase(type)) {
-			return new IcnsFiles(file, image);
+			return new IcnsFiles(file, image, icon);
 		}
 		if ("ico".equalsIgnoreCase(type)) {
-			return new IcoFiles(file, image);
+			return new IcoFiles(file, image, icon);
 		}
 		if ("png".equalsIgnoreCase(type)) {
-			return new PngFiles(file, image);
+			return new PngFiles(file, image, icon);
 		}
 		
 		throw new IllegalArgumentException(String.format("%s: %s", UNKNOWN_TYPE, type));

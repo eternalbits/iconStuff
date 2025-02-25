@@ -16,10 +16,15 @@
 
 package io.github.eternalbits.bitmap;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import javax.imageio.ImageIO;
 
 import io.github.eternalbits.icons.Static;
 
@@ -39,153 +44,116 @@ public class MapHeader {
 	public MapHeader() {}
 	
 	/**
-	 * Returns the 3 types of icons for Apple: ICON is based only on the 3 colors red,
-	 *  green and blue applying a simple compression routine. MASK is based on copying
-	 *  all items in the mask, without conversion. RGBA takes all the components including
-	 *  the colors and the mask and passes it through the same compression routine.
+	 * Write BufferedImage in PNG format to output RandomAccessFile and returns
+	 *  the length of that BufferedImage.
+	 * 
+	 * @param image	An access to the BufferedImage.
+	 * @param to	Write access to RandomAccessFile.
+	 * @return	The length of the BufferedImage.
+	 */
+	public int writePng(BufferedImage image, RandomAccessFile to) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(image, "png", baos);
+		to.write(baos.toByteArray());
+		return baos.size();
+	}
+	
+	/**
+	 * Writes the Bitmap. Note the reminiscence used by Windows XP.
+	 * 
+	 * @param image	An access to the BufferedImage.
+	 * @param to	Write access to RandomAccessFile.
+	 * @param power	The length of one side.
+	 * @return	The length of the Bitmap.
+	 */
+	public int writeBitmap(BufferedImage image, RandomAccessFile to, int power) throws IOException {
+		int length = 40 + 4 * power * power + power * Static.roundUp(power / 8, 4);
+		byte[] buffer = Static.toBitmap(image, power);
+		to.write(headerForIcon(length, power));
+		int diff = 4 * power;
+		for (int i = power * diff - diff; i >= 0; i -= diff)
+			to.write(buffer, i, diff);
+		int padd = Static.roundUp(power / 8, 4);
+		byte[] trailer = trailerForIcon(buffer, power);
+		for (int i = power * padd - padd; i >= 0; i -= padd)
+			to.write(trailer, i, padd);
+		return length;
+	}
+	
+	/**
+	 * Reads the Bitmap. In this case a header of 108 bytes in length
+	 *  is used to pay attention to the mask.
 	 * 
 	 * @param from	Read access to RandomAccessFile.
 	 * @param original	The reading position.
-	 * @param size	Number of bytes to be read.
-	 * @param function	ICON to read the RGB code, MASK to read the mask and RGBA to read everything.
+	 * @param size	Number of bytes to be passed.
+	 * @param power	The length of one side.
+	 * @return	Image with an accessible buffer of image data.
+	 */
+	public BufferedImage createBitmap(RandomAccessFile from, int original, int size, int power) throws IOException {
+		int header = 14 + Static.BITMAP_HEADER;			// It uses 108 bytes instead of 40 because this allows the mask to be used
+		int length = header + 4 * power * power;		// length of the image as a bitmap
+		byte[] buffer = new byte[length];				// buffer the image as a bitmap
+		from.seek(original + 40);
+		from.read(buffer, header, 4 * power * power);	// read the image directly into the buffer
+		Static.headerForBitmap(buffer, length, power);	// finalizes the bitmap
+		return ImageIO.read(new ByteArrayInputStream(buffer));
+	}
+
+	/**
+	 * Constructs the header from a bitmap icon. Note the multiplication of the
+	 *  vertical offset by 2 and a bitmap remnant that was used by Windows XP.
+	 * 
+	 * @param header	.
+	 * @param power	The length of one side.
+	 * @return	The resulting header bitmap.
+	 */
+	private byte[] headerForIcon(int length, int power) {
+		byte[] header = new byte[40];
+		ByteBuffer tw = ByteBuffer.wrap(header).order(ByteOrder.LITTLE_ENDIAN);
+		tw.putInt	(40);
+		tw.putInt	(power);
+		tw.putInt	(power * 2);
+		tw.putShort	((short) 1);
+		tw.putShort	((short) 32);
+		tw.putInt	(0);
+		tw.putInt	(length - 40);
+		tw.putInt	(2835);
+		tw.putInt	(2835);
+		tw.putInt	(0);
+		tw.putInt	(0);
+		return header;
+	}
+	
+	/**
+	 * Although there are currently 256 pixels to distinguish the transparency color,
+	 *  bitmaps until Windows XP used a smaller set of colors. These colors are not
+	 *  currently used, but the icon only works with this transparency. In Windows XP
+	 *  the only transparency used are this bitmap generated here.
+	 * 
+	 * @param source	The default image with 4 colors specifying the RGBA.
+	 * @param power	The length of one side.
 	 * @return	The resulting bitmap.
 	 */
-	public byte[] BitmapToApple(RandomAccessFile from, int original, int size, String function) throws IOException {
-		byte[] source = new byte[40];
-		byte[] detail = new byte[0];
-		from.seek(original);
-		
-		from.read(source);
-		ByteBuffer tf = ByteBuffer.wrap(source).order(ByteOrder.LITTLE_ENDIAN);
-		int size40	= tf.getInt(0);
-		int width	= tf.getInt(4);
-		short pixel	= tf.getShort(14);
-		
-		if (size40 == 40 && width <= 2048 && pixel == 32) {
-		//	The size of each row is rounded up to a multiple of 4 bytes by padding.
-			int diff = Static.roundUp(4 * width, 4);
-			source = new byte[width * diff];
-		//	Usually pixels are stored "bottom-up", starting in the lower left corner.
-			for (int i = width * diff - diff; i >= 0; i -= diff)
-				from.read(source, i, diff);
-			
-			if (function.equals("ICON")) {
-				byte[] apple = new byte[Static.appleRound(3, width)];
-				int posic = 0;
-				for (int i = 0; i < 3; i++) {
-					byte[] icon = new byte[width * width];
-					PreparingForApple(source, icon, 2 - i);
-					posic = EncodeRgbAndMask(icon, apple, posic);
+	private byte[] trailerForIcon(byte[] source, int power) {
+		int padd = Static.roundUp(power / 8, 4);
+		byte[] trailer = new byte[power * padd];
+		ByteBuffer tw = ByteBuffer.wrap(trailer).order(ByteOrder.LITTLE_ENDIAN);
+		ByteBuffer tr = ByteBuffer.wrap(source).order(ByteOrder.LITTLE_ENDIAN);
+		for (int y = 0; y < power; y++) {
+			for (int x = 0; x < padd; x++) {
+				byte maskValue = 0;
+				for (int bit = 0; bit < 8; bit++) {
+					if ((x * 8) + bit < power) {
+						int srcPixel = tr.getInt(4 * ((y * power) + (x * 8) + bit));
+						if ((srcPixel >>> 24) < 128)
+							maskValue |= (1 << (7 - bit));
+					}
 				}
-				int it32 = width == 128 ? 4 : 0;
-				detail = new byte[it32 + posic];
-				System.arraycopy(apple, 0, detail, it32, posic);
-			}
-			
-			else
-			if (function.equals("MASK")) {
-				detail = new byte[width * width];
-				PreparingForApple(source, detail, 3);
-			}
-			
-			else {
-				byte[] apple = new byte[Static.appleRound(4, width)];
-				int posic = 0;
-				for (int i = 0; i < 4; i++) {
-					byte[] icon = new byte[width * width];
-					PreparingForApple(source, icon, 3 - i);
-					posic = EncodeRgbAndMask(icon, apple, posic);
-				}
-				detail = new byte[4 + posic];
-				ByteBuffer tw = ByteBuffer.wrap(detail).order(ByteOrder.BIG_ENDIAN);
-				System.arraycopy(apple, 0, detail, 4, posic);
-				tw.putInt(0, 0x41524742);	// ARGB
-			}
-
-		}
-		
-		return detail;
-	}
-	
-	/**
-	 *  Copy the respective bytes from the source to the icon. While in the source the
-	 *   bytes are distributed, like rgba, in the icon the bytes are grouped, like
-	 *   red, green and blue.
-	 * 
-	 * @param source	Byte source, always RGBA.
-	 * @param icon	Destination of the bytes.
-	 * @param index	Color index: 0 for red, 1 for green, 2 for blue and 3 for transparency.
-	 */
-	void PreparingForApple(byte[] source, byte[] icon, int index) {
-		for (int i = index, n = 0; n < icon.length; i += 4, n++) 
-			icon[n] = source[i];
-	}
-	
-	/**
-	 *  This directive follows a very linear order: it is 1 byte up to 0x7F followed
-	 *   by the number of bytes to be repeated or 1 byte greater than or equal to 0x80
-	 *   which, decreased by 3, is followed by 1 byte that comes immediately after.
-	 *   This usually equates to a smaller percentage.
-	 * 
-	 * @param icon	The default image that specifies 3 colors (RGB) or 4 colors (ARGB).
-	 * @param apple	The resulting image following the same order.
-	 * @param posic	The old position.
-	 * @return	The new position.
-	 */
-	int EncodeRgbAndMask(byte[] icon, byte[] apple, int posic) {
-		byte[] seq = new byte[0x80];
-		int index = 0;
-		while (index < icon.length) {
-			int count = 0;
-			while (count <= 0x7F && index < icon.length) {
-				if (index + 2 < icon.length && icon[index] == icon[index + 1] && icon[index] == icon[index + 2]) 
-					break;
-				seq[count] = icon[index];
-				index++;
-				count++;
-			}
-			if (count != 0 && posic < apple.length) {
-				apple[posic++] = (byte) (count - 1);
-				for (int i = 0; i < count && posic < apple.length; )
-					apple[posic++] = seq[i++];
-			}
-			if (index >= icon.length) 
-				break;
-			byte repeated = icon[index];
-			count = 0;
-			while (count <= 0x7F && index < icon.length && icon[index] == repeated) {
-				index++;
-				count++;
-			}
-			if (count >= 3 && posic + 1 < apple.length) {
-				apple[posic++] = (byte) (0x80 + count - 3);
-				apple[posic++] = repeated;
-			} else {
-			// There are less than 3 repeating bytes, drop the result
-				index -= count;
+				tw.put((y * padd) + x, maskValue);
 			}
 		}
-		return posic;
+		return trailer;
 	}
 	
-	/**
-	 * This routine is limited to passing bytes from one side to the other assuming a maximum of 16384 bytes.
-	 * 
-	 * @param from	Read access to RandomAccessFile.
-	 * @param original	The reading position.
-	 * @param to	Write access to RandomAccessFile.
-	 * @param size	Number of bytes to be passed.
-	 */
-	public void WriteImage(RandomAccessFile from, int original, RandomAccessFile to, int size) throws IOException {
-		from.seek(original);
-		int get = 0, go = size;
-		while (get < size) {
-			byte[] detail = new byte[go < 0X4000 ? go : 0X4000];
-			from.read(detail);
-			to.write(detail);
-			get += detail.length;
-			go -= detail.length;
-		}
-	}
-
 }

@@ -47,14 +47,14 @@ public class IcnsFiles extends DiskIcons {
 	 * @param file	Write access to ICNS file.
 	 * @param image	Abstract class that represents a disk icon.
 	 */
-	public IcnsFiles(File file, DiskIcons image) throws IOException {
+	public IcnsFiles(File file, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, "rw");
 		try { // Always close media on Exception
 			media.setLength(0);
 			path = file.getPath();
 			setType();
 			
-			header = new IcnsHeader(this, image);
+			header = new IcnsHeader(this, image, icon);
 			length = file.length();			
 		}
 		catch (Exception e) {

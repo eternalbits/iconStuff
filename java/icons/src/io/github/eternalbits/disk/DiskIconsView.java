@@ -16,17 +16,21 @@
 
 package io.github.eternalbits.disk;
 
+import java.awt.image.BufferedImage;
+
 /**
- * A read-only view of a {@link DiskImageView}. All fields are public.
+ * A read and write view of a {@link DiskImageView}. All fields are public.
  * <p>
  */
 public class DiskIconsView {
 	
-	public int		isIcon;						// This is the type of icon that goes from NOT_AN_ICON to ICON_ARGB
-	public int		offset;						// The offset goes from the beginning of the file to the beginning of the icon
-	public int		length;						// Icon length, in bytes
-	public String	type;						// The type can be PNG, ICO or a character set from the Apple Macintosh
-	public String	description;				// A brief description of the icon for the viewer
-	public String	layout;						// A detailed description for programming 
+	public int				isIcon;				// This is the input icon type that goes from NOT_AN_ICON to ICON_ARGB
+	public int				forIcon;			// This is the output icon type which is PNG, BITMAP, APPLE, MASK, ARGB
+	public int				offset;				// The offset goes from the beginning of the file to the beginning of the icon
+	public int				length;				// Icon length, in bytes
+	public String			type;				// The type can be PNG, ICO or a character set from the Apple macOS
+	public String			description;		// A brief description of the icon for the viewer
+	public String			layout;				// A detailed description for programming 
+	public BufferedImage	image;				// A PNG image
 	
 }

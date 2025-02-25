@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Icons
-Comment=Convert ICO and ICNS disk images
+Comment=Convert ICO and ICNS disk icons
 Exec=java -jar /opt/IconStuff/Icons.jar
 Icon=/opt/IconStuff/Icons.png
 Categories=Utility;

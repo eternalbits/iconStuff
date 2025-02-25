@@ -38,6 +38,7 @@ import org.apache.commons.cli.ParseException;
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskImage;
 import io.github.eternalbits.disk.DiskImageView;
+import io.github.eternalbits.disk.WrongHeaderException;
 import io.github.eternalbits.icons.gui.FrontEnd;
 
 /**
@@ -57,7 +58,7 @@ public class Icons {
 	 */
 	private void showView(File file) throws IOException {
 		try (DiskIcons image = DiskImage.open(file, "r")) {
-			dump(image.getView());
+			dump(image.getShow());
 		}
 	}
 	
@@ -67,11 +68,12 @@ public class Icons {
 	 * @param from	File to be copied.
 	 * @param to	File we want to overlay.
 	 * @param type	Extension type: ico, icns or png.
+	 * @param icon	A list with the icon and output.
 	 */
-	private void copy(File from, File to, String type) throws IOException {
+	private void copy(File from, File to, String type, String icon) throws IOException, WrongHeaderException {
 		File copy = null;
 		try (DiskIcons image = DiskImage.open(from, "r")) {
-			try (DiskIcons clone = DiskImage.create(type, to, image)) {
+			try (DiskIcons clone = DiskImage.create(type, to, image, icon)) {
 				copy = to; // copy open by DiskImage
 			}
 		}
@@ -102,6 +104,7 @@ public class Icons {
 	 * @param args	Parameters as described in --help.
 	 */
 	public static void main(String[] args) throws Exception {
+		
 		if (args.length == 0 && !GraphicsEnvironment.isHeadless()) {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			SwingUtilities.invokeLater(new Runnable() {
@@ -136,6 +139,7 @@ public class Icons {
 		options.addOptionGroup(source);
 		options.addOption(Option.builder("w").longOpt("write").desc("set <out> as destination file for copy").hasArgs().argName("out").build());
 		options.addOption(Option.builder("f").longOpt("format").desc("copy output format: ICNS, ICO or PNG").hasArgs().argName("fmt").build());
+		options.addOption(Option.builder("i").longOpt("icon").desc("a list with the icon and output").hasArgs().argName("ico").build());
 		options.addOption(Option.builder("o").longOpt("overwrite").desc("overwrite existing file on copy").build());
 		return options;
 	}
@@ -181,7 +185,7 @@ public class Icons {
 					String f = Static.getExtension(to).toLowerCase();
 					if (!Arrays.asList(DEFAULT_FILE_FILTER).contains(f))
 						throw new ParseException(INCORRECT_COMMAND);
-					copy(from, to, f);
+					copy(from, to, f, null);
 					return;
 				}
 			}
@@ -219,12 +223,14 @@ public class Icons {
 					f = Static.getExtension(to).toLowerCase();
 				if (!Arrays.asList(DEFAULT_FILE_FILTER).contains(f))
 					throw new ParseException(INCORRECT_COMMAND);
-				
-				copy(from, to, f);
+				if (cmd.hasOption("i") && cmd.getOptionValues("i").length != 1)
+					throw new ParseException(String.format(TOO_MANY_OPTIONS, "i"));
+								
+				copy(from, to, f, cmd.getOptionValue("i"));
 				return;
 			}
 			
-			if (cmd.hasOption("w") || cmd.hasOption("o") || cmd.hasOption("f"))
+			if (cmd.hasOption("w") || cmd.hasOption("o") || cmd.hasOption("f") || cmd.hasOption("i"))
 				throw new ParseException(INCORRECT_COMMAND);
 			
 			if (cmd.hasOption("d")) {
@@ -232,7 +238,7 @@ public class Icons {
 				return;
 			}
 			
-		} catch (ParseException | IOException e) {
+		} catch (ParseException | IOException | WrongHeaderException e) {
 			printHelp(options);
 			System.out.println("\n\n"+Static.simpleString(e));
 			System.exit(1);
@@ -253,7 +259,9 @@ public class Icons {
 		formatter.setSyntaxPrefix("Usage: ");
 		final String prefix = "--";
 		String header = "\nTo convert ICO to ICNS disk images. Version "+version+"\n\n";
-		String footer = ("\nOne of ^copy or ^dump is required.\n").replace("^", prefix);
+		String footer = ("\nOne of ^copy or ^dump is required. ^icon can be a phrase like"
+				+ " 1=ic13:png;2=ic11:png;3=ic04:bit;4=ic07:png for ICNS or"
+				+ " 0=png;1=png;2=*;3=*;4=png;5=*;6=*;7=bit for ICO\n").replace("^", prefix);
 		formatter.setLongOptPrefix(" "+prefix);
 		formatter.printHelp("java -jar "+jar, header, options, footer, true);
 	}
@@ -267,16 +275,18 @@ public class Icons {
 	private static void dump(Object obj, String in) {
 		for (Field fld: obj.getClass().getDeclaredFields()) {
 			try {
-				if (!Modifier.isPrivate(fld.getModifiers())) {
-					if (fld.getAnnotation(Deprecated.class) == null) {
-						if (!fld.getType().isAssignableFrom(List.class)) {
-							System.out.println(in+fld.getName()+": "+fld.get(obj));
-						} else {
-							int i = 0;
-							for (Object item: (List<?>)fld.get(obj)) {
-								System.out.println(in+fld.getName()+"["+i+"]");
-								dump(item, in+"    ");
-								i++;
+				if (!fld.getName().startsWith("this$")) {
+					if (!Modifier.isPrivate(fld.getModifiers())) {
+						if (fld.getAnnotation(Deprecated.class) == null) {
+							if (!fld.getType().isAssignableFrom(List.class)) {
+								System.out.println(in+fld.getName()+": "+fld.get(obj));
+							} else {
+								int i = 0;
+								for (Object item: (List<?>)fld.get(obj)) {
+									System.out.println(in+fld.getName()+"["+i+"]");
+									dump(item, in+"    ");
+									i++;
+								}
 							}
 						}
 					}

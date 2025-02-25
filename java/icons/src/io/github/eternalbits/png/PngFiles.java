@@ -45,14 +45,14 @@ public class PngFiles extends DiskIcons {
 	 * @param file	Write access to PNG file.
 	 * @param image	Abstract class that represents a disk icon.
 	 */
-	public PngFiles(File file, DiskIcons image) throws IOException {
+	public PngFiles(File file, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, "rw");
 		try { // Always close media on Exception
 			media.setLength(0);
 			path = file.getPath();
 			setType();
 			
-			header = new PngHeader(this, image);
+			header = new PngHeader(this, image, icon);
 			length = file.length();
 		}
 		catch (Exception e) {

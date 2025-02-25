@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.eternalbits.bitmap.MapHeader;
+import io.github.eternalbits.apple.AppHeader;
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.disk.WrongHeaderException;
@@ -41,7 +41,7 @@ class IcnsHeader {
 	static final int HEADER_SIZE = 8;
 	
 	private final PngHeader img;	// Parent object to associated PNG
-	private final MapHeader map;	// Parent object to associated BITMAP
+	private final AppHeader app;	// Parent object to associated APPLE and ARGB
 	
 	List<DiskIconsView> disk = new ArrayList<DiskIconsView>();
 
@@ -92,17 +92,17 @@ class IcnsHeader {
 			new OSType("ic07", "128 JPEG or PNG"),
 			new OSType("ic08", "256 JPEG or PNG"),
 			new OSType("ic09", "512 JPEG or PNG"),
-			new OSType("ic10", "1024 JPEG or PNG"),
-			new OSType("ic11", "32 JPEG or PNG"),
-			new OSType("ic12", "64 JPEG or PNG"),
-			new OSType("ic13", "256 JPEG or PNG"),
-			new OSType("ic14", "512 JPEG or PNG"),
+			new OSType("ic10", "1024² JPEG or PNG"),
+			new OSType("ic11", "32² JPEG or PNG"),
+			new OSType("ic12", "64² JPEG or PNG"),
+			new OSType("ic13", "256² JPEG or PNG"),
+			new OSType("ic14", "512² JPEG or PNG"),
 			new OSType("ic04", "16 ARGB or JPEG or PNG"),
-			new OSType("ic05", "32 ARGB or JPEG or PNG"),
+			new OSType("ic05", "32² ARGB or JPEG or PNG"),
 			new OSType("icsb", "18 ARGB or JPEG or PNG"),
-			new OSType("icsB", "36 JPEG or PNG"),
+			new OSType("icsB", "36² JPEG or PNG"),
 			new OSType("sb24", "24 JPEG or PNG"),
-			new OSType("SB24", "48 JPEG or PNG"),
+			new OSType("SB24", "48² JPEG or PNG"),
 			new OSType("info", "Info binary plist"),
 		};
 	
@@ -123,58 +123,68 @@ class IcnsHeader {
 	static private class OSMatch {
 		private String type;
 		private String match;
+		private int isIcon;
 		private String mask;
-		public OSMatch(String type, String match, String mask) {
+		public OSMatch(String type, String match, int isIcon, String mask) {
 			this.type = type;
 			this.match = match;
+			this.isIcon = isIcon;
 			this.mask = mask;
 		}
 	}
 	
 	static private final OSMatch[] osMatch = new OSMatch[] {
-			new OSMatch("is32", "16 32-bit", "s8mk"),
-			new OSMatch("il32", "32 32-bit", "l8mk"),
-			new OSMatch("ih32", "48 32-bit", "h8mk"),
-			new OSMatch("it32", "128 32-bit", "t8mk"),
-			new OSMatch("icp4", "16 PNG", null),
-			new OSMatch("icp4", "16² PNG", null),
-			new OSMatch("icp4", "16 32-bit", "s8mk"),
-			new OSMatch("icp5", "32 PNG", null),
-			new OSMatch("icp5", "32 32-bit", "l8mk"),
-			new OSMatch("icp6", "48 PNG", null),
-			new OSMatch("ic07", "128 PNG", null),
-			new OSMatch("ic07", "128² PNG", null),
-			new OSMatch("ic08", "256 PNG", null),
-			new OSMatch("ic09", "512 PNG", null),
-			new OSMatch("ic10", "1024² PNG", null),
-			new OSMatch("ic10", "1024 PNG", null),
-			new OSMatch("ic11", "32² PNG", null),
-			new OSMatch("ic12", "64² PNG", null),
-			new OSMatch("ic12", "64 PNG", null),
-			new OSMatch("ic13", "256² PNG", null),
-			new OSMatch("ic14", "512² PNG", null),
-			new OSMatch("ic04", "16 PNG", null),
-			new OSMatch("ic04", "16 32-bit", null),
-			new OSMatch("ic05", "32² PNG", null),
-			new OSMatch("ic05", "32 32-bit", null),
-			new OSMatch("icsb", "18 PNG", null),
-			new OSMatch("icsb", "18² PNG", null),
-			new OSMatch("icsb", "18 32-bit", null),
-			new OSMatch("icsB", "36² PNG", null),
-			new OSMatch("icsB", "36 PNG", null),
-			new OSMatch("sb24", "24 PNG", null),
-			new OSMatch("sb24", "24² PNG", null),
-			new OSMatch("SB24", "48² PNG", null),
+			new OSMatch("is32", "16 32-bit", 3, "s8mk"),
+			new OSMatch("il32", "32 32-bit", 3, "l8mk"),
+			new OSMatch("ih32", "48 32-bit", 3, "h8mk"),
+			new OSMatch("it32", "128 32-bit", 3, "t8mk"),
+			new OSMatch("icp4", "16 PNG", 1, null),
+			new OSMatch("icp4", "16² PNG", 1, null),
+			new OSMatch("icp4", "16 32-bit", 3, "s8mk"),
+			new OSMatch("icp5", "32 PNG", 1, null),
+			new OSMatch("icp5", "32 32-bit", 3, "l8mk"),
+			new OSMatch("icp6", "48 PNG", 1, null),
+			new OSMatch("ic07", "128 PNG", 1, null),
+			new OSMatch("ic07", "128² PNG", 1, null),
+			new OSMatch("ic08", "256 PNG", 1, null),
+			new OSMatch("ic09", "512 PNG", 1, null),
+			new OSMatch("ic10", "1024² PNG", 1, null),
+			new OSMatch("ic10", "1024 PNG", 1, null),
+			new OSMatch("ic11", "32² PNG", 1, null),
+			new OSMatch("ic11", "32 PNG", 1, null),
+			new OSMatch("ic12", "64² PNG", 1, null),
+			new OSMatch("ic12", "64 PNG", 1, null),
+			new OSMatch("ic13", "256² PNG", 1, null),
+			new OSMatch("ic13", "256 PNG", 1, null),
+			new OSMatch("ic14", "512² PNG", 1, null),
+			new OSMatch("ic14", "512 PNG", 1, null),
+			new OSMatch("ic04", "16 PNG", 1, null),
+			new OSMatch("ic04", "16 32-bit", 5, null),
+			new OSMatch("ic05", "32² PNG", 1, null),
+			new OSMatch("ic05", "32 PNG", 1, null),
+			new OSMatch("ic05", "32 32-bit", 5, null),
+			new OSMatch("icsb", "18 PNG", 1, null),
+			new OSMatch("icsb", "18² PNG", 1, null),
+			new OSMatch("icsb", "18 32-bit", 5, null),
+			new OSMatch("icsB", "36² PNG", 1, null),
+			new OSMatch("icsB", "36 PNG", 1, null),
+			new OSMatch("sb24", "24 PNG", 1, null),
+			new OSMatch("sb24", "24² PNG", 1, null),
+			new OSMatch("SB24", "48² PNG", 1, null),
+			new OSMatch("SB24", "48 PNG", 1, null),
 		};
 	
-	static String[] OSMatch(String match) {
+	static String[] OSMatch(String match, String type) {
+		String[] ms_type = null;
 		for (OSMatch array : osMatch) {
 			if (array.match.equals(match)) {
-				String[] fs_type = {array.type, array.mask};
-				return fs_type;
+				String[] fs_type = {Integer.toString(array.isIcon), array.type, array.mask};
+				if (array.type.equals(type))
+					return fs_type;
+				ms_type = fs_type;
 			}
 		}
-		return null;
+		return ms_type;
 	}
 	
 	public static String OSMask(String type) {
@@ -190,45 +200,35 @@ class IcnsHeader {
 	 * Apple ICNS file writing routine.
 	 * <p>
 	 */
-	IcnsHeader(IcnsFiles icns, DiskIcons image) throws IOException {
+	IcnsHeader(IcnsFiles icns, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		img = new PngHeader();
-		map = new MapHeader();
+		app = new AppHeader();
 		if (image.getFiles() == null) return;
+		if (Static.delimiterIcon(icon, image))
+			throw new WrongHeaderException(getClass(), icns.getPath());
 		
 		/**
 		 * Start by searching the available icons for the corresponding fs.type and fs.mask
 		 */
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, MASK, ARGB
-				String[] fs_type = OSMatch(fs.layout);					// Search for fs.type and fs.mask in OSMatch according to fs.layout
+			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+				String[] fs_type = OSMatch(fs.layout, fs.type);			// Search for fs.type and fs.mask in OSMatch according to fs.layout
 				if (fs_type != null) {									// If found the result cannot be null
-					fs.type = fs_type[0];
+					fs.forIcon = Integer.parseInt(fs_type[0]);			// PNG, APPLE, ARGB
+					fs.type = fs_type[1];
 					fs.length += 8;
 					local.add(fs);
-					if (fs_type[1] != null) {							// If fs.mask is not null
-						if (fs.isIcon == DiskIcons.ICON_BITMAP) {		// If fs.isIcon comes from bitmap (Windows)
-							DiskIconsView fm = new DiskIconsView();		// creates a new DiskIconsView
-							fm.isIcon = DiskIcons.ICON_BITMAP;
-							fm.type = fs_type[1];
-							fm.offset = fs.offset;
-							fm.length = fs.length;
-							fm.layout = fs.layout;
-							fm.description = fs.description.replaceFirst("RGBA", "MASK");
-							fs.description = fs.description.replaceFirst("RGBA", "ICON");
-							local.add(fm);
-						}
-						else
-						if (fs.isIcon == DiskIcons.ICON_APPLE) {		// If fs.isIcon comes from Apple
-							for (DiskIconsView fm: image.getFiles()) {	// searches for the respective bitmap
-								if (fm.type.equals(fs_type[1])) {
-									fm.isIcon = DiskIcons.ICON_MASK;
-									fm.length += 8;
-									local.add(fm);
-									break;
-								}
-							}
-						}
+					if (fs_type[2] != null) {							// If fs.mask is not null
+						DiskIconsView fm = new DiskIconsView();			// creates a new DiskIconsView
+						fm.forIcon = DiskIcons.ICON_MASK;				// MASK
+						fm.type = fs_type[2];
+						fm.isIcon = fs.isIcon;
+						fm.offset = fs.offset;
+						fm.length = fs.length;
+						fm.layout = fs.layout;
+						fm.image = fs.image;
+						local.add(fm);
 					}
 				}
 			}
@@ -266,12 +266,30 @@ class IcnsHeader {
 		 * Then write the icons
 		 */
 		for (DiskIconsView fs: local) {
-			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, MASK, ARGB
+			if (fs.isIcon > 0) {	// PNG, APPLE, MASK, ARGB
 				byte[] buffer = null;
-				if (fs.isIcon == DiskIcons.ICON_BITMAP) {
-					String function = fs.description.substring(Math.max(fs.description.length() - 4, 0));
-					buffer = map.BitmapToApple(from, fs.offset, fs.length, function);
-					fs.length = buffer.length + 8;
+				if (fs.isIcon != DiskIcons.ICON_PNG || fs.forIcon != DiskIcons.ICON_PNG) {
+					
+					int power = Static.getInteger(fs.layout);
+					if (fs.forIcon == DiskIcons.ICON_PNG) {
+						buffer = app.writePng(fs.image);
+						fs.length = buffer.length + 8;
+					}
+					else
+					if (fs.forIcon == DiskIcons.ICON_APPLE) {
+						buffer = app.writeApple(fs.image, power);
+						fs.length = buffer.length + 8;
+					}
+					else
+					if (fs.forIcon == DiskIcons.ICON_MASK) {
+						buffer = app.writeMask(fs.image, power);
+						fs.length = buffer.length + 8;
+					}
+					else
+					if (fs.forIcon == DiskIcons.ICON_ARGB) {
+						buffer = app.writeArgb(fs.image, power);
+						fs.length = buffer.length + 8;
+					}
 				}
 				
 				ByteBuffer tw = ByteBuffer.wrap(header).order(IcnsFiles.BYTE_ORDER);
@@ -279,17 +297,10 @@ class IcnsHeader {
 				tw.putInt(fs.length);
 				to.write(header);
 				
-				if (fs.isIcon == DiskIcons.ICON_PNG) {
-					img.WriteImage(from, fs.offset, to, fs.length - 8);
-				}
-				else
-				if (fs.isIcon == DiskIcons.ICON_BITMAP) {
-					to.write(buffer);
-				}
-				else
-				if (fs.isIcon == DiskIcons.ICON_APPLE || fs.isIcon == DiskIcons.ICON_MASK || fs.isIcon == DiskIcons.ICON_ARGB) {
-					map.WriteImage(from, fs.offset, to, fs.length - 8);
-				}
+				if (fs.isIcon == DiskIcons.ICON_PNG && fs.forIcon == DiskIcons.ICON_PNG) 
+					img.writeImage(from, fs.offset, to, fs.length - 8);
+				else to.write(buffer);
+				
 			}
 		}
 		
@@ -316,9 +327,9 @@ class IcnsHeader {
 	 * Apple ICNS file reading routine.
 	 * <p>
 	 */
-	IcnsHeader(IcnsFiles icns, ByteBuffer in) throws IOException, WrongHeaderException {
+	IcnsHeader(IcnsFiles icns, ByteBuffer in) throws IOException, IOException, WrongHeaderException {
 		img = new PngHeader();
-		map = new MapHeader();
+		app = new AppHeader();
 				
 		if (in.remaining() >= HEADER_SIZE) {
 			in.order(IcnsFiles.BYTE_ORDER);
@@ -351,10 +362,11 @@ class IcnsHeader {
 					if (tr.limit() >= 16 && tr.getInt(8) == PngFiles.ICON_PGN && tr.getInt(12) == PngFiles.DOS_UNIX) { // %PNG....
 						view.isIcon = DiskIcons.ICON_PNG;
 						view.description = img.ImageHeader(icns, offset + 16, length - 8);
+						view.image = img.createPng(icns, view.offset, view.length);
 						view.layout = view.description;
 					} 
 					else 
-					if (tr.limit() >= 16 && tr.getInt(12) == IcnsFiles.ICON_JPEG) { // jP: JPEG 2000
+					if (tr.limit() >= 16 && tr.getInt(8) == 12 && tr.getInt(12) == IcnsFiles.ICON_JPEG) { // jP: JPEG 2000
 						view.description = Static.getInteger(view.description) + " JPEG 2000";
 					} 
 					else 
@@ -367,12 +379,36 @@ class IcnsHeader {
 					else 
 					if ((view.type.equals("ic04") || view.type.equals("ic05") || view.type.equals("icsb")) 
 							&& tr.limit() >= 16 && tr.getInt(8) == IcnsFiles.ICON_ARGB) { // ARGB: 8-bit mask and 24-bit RGB
-						view.isIcon = DiskIcons.ICON_ARGB;
 						view.description = Static.getInteger(view.description) + " 32-bit ARGB";
 						view.layout = view.description.replaceFirst(" ARGB", "");
+						int power = Static.getInteger(view.layout);
+						view.image = app.createArgb(icns.getMedia(), view.offset, view.length, power);
+						if (view.image != null)
+							view.isIcon = DiskIcons.ICON_ARGB;
 					} 
 					offset += length;
 					disk.add(view);
+				}
+
+				/**
+				 * Finally we have all the icons so that we can join the 24-bit APPLE with the masks
+				 */
+				for (DiskIconsView fs: disk) {
+					if (fs.isIcon == DiskIcons.ICON_APPLE) {
+						fs.isIcon = DiskIcons.NOT_AN_ICON;
+						String[] fs_type = OSMatch(fs.layout, fs.type);
+						if (fs_type != null && fs_type[2] != null) {					// If found the result cannot be null
+							for (DiskIconsView fm: disk) {								// searches for the respective bitmap
+								if (fm.type.equals(fs_type[2])) {
+									int power = Static.getInteger(fs.layout);
+									fs.image = app.createApple(icns.getMedia(), fs.offset, fs.length, fm.offset, fm.length, power);
+									if (fs.image != null)
+										fs.isIcon = DiskIcons.ICON_APPLE;
+									break;
+								}
+							}
+						}
+					}
 				}
 
 				return;

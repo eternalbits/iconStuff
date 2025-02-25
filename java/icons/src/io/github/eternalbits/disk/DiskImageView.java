@@ -17,7 +17,6 @@
 package io.github.eternalbits.disk;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,13 +41,12 @@ public class DiskImageView {
 		fileType 		= image.getType();
 		fileLength 		= image.length;
 		
-		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
+		fileIcons = new ArrayList<DiskIconsView>();
 		if (image.getFiles() != null) {
 			for (DiskIconsView fs: image.getFiles()) {
-				local.add(fs);
+				fileIcons.add(fs);
 			}
 		}
-		fileIcons = Collections.unmodifiableList(local);
 	}
 	
 }

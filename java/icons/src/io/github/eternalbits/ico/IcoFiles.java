@@ -44,14 +44,14 @@ public class IcoFiles extends DiskIcons {
 	 * @param file	Write access to ICO file.
 	 * @param image	Abstract class that represents a disk icon.
 	 */
-	public IcoFiles(File file, DiskIcons image) throws IOException {
+	public IcoFiles(File file, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, "rw");
 		try { // Always close media on Exception
 			media.setLength(0);
 			path = file.getPath();
 			setType();
 			
-			header = new IcoHeader(this, image);
+			header = new IcoHeader(this, image, icon);
 			length = file.length();
 		}
 		catch (Exception e) {

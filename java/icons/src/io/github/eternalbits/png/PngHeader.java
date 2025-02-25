@@ -16,12 +16,17 @@
 
 package io.github.eternalbits.png;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
+
+import javax.imageio.ImageIO;
 
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
@@ -47,8 +52,10 @@ class PngHeader {
 	 * @param png	PNG file access.
 	 * @param in	Access to DiskIconsView which is a preview of another result.
 	 */
-	PngHeader(PngFiles png, DiskIcons image) throws IOException {
+	PngHeader(PngFiles png, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		if (image.getFiles() == null) return;
+		if (Static.delimiterIcon(icon, image))
+			throw new WrongHeaderException(getClass(), png.getPath());
 		
 		/**
 		 * Start by choosing the largest PNG
@@ -56,7 +63,7 @@ class PngHeader {
 		DiskIconsView es = null;
 		int i = 0, m = 0;
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon == DiskIcons.ICON_PNG) {
+			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
 				i = Static.getInteger(fs.description);
 				if (i > m) { es = fs; m = i; }
 			}
@@ -68,7 +75,15 @@ class PngHeader {
 		if (es != null) {
 			RandomAccessFile from = image.getMedia();
 			RandomAccessFile to = png.getMedia();
-			this.WriteImage(from, es.offset, to, es.length);
+			if (es.isIcon == DiskIcons.ICON_PNG) {
+				this.writeImage(from, es.offset, to, es.length);							// Passing bytes PNG from one side to the other
+			}
+			else {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();					// Passing bytes from a saved image to PNG
+				ImageIO.write(es.image, "png", baos);
+				to.write(baos.toByteArray());
+				es.length = baos.size();
+			}
 		}
 	}
 	
@@ -92,7 +107,8 @@ class PngHeader {
 				view.offset = 0;
 				view.length = (int) png.getLength();
 				view.type = png.getType();
-				view.description = this.ImageHeader(png, HEADER_SIZE, png.getLength());
+				view.description = this.ImageHeader(png, HEADER_SIZE, view.length);
+				view.image = this.createPng(png, view.offset, view.length);
 				view.layout = view.description;
 				disk.add(view);
 				return;
@@ -117,7 +133,7 @@ class PngHeader {
 	 * @param size	Number of bytes to be passed.
 	 * @return	String representing what was read, something like "256 PNG".
 	 */
-	public String ImageHeader(DiskIcons img, long offset, long size) throws IOException, WrongHeaderException {
+	public String ImageHeader(DiskIcons img, int offset, int size) throws IOException, WrongHeaderException {
 		
 		int[]	dim = {0, 0, 0, 0};		// width, height, ppu X, ppu Y
 		int		length = 0;				// Length of chunk, in bytes, msb first
@@ -169,6 +185,22 @@ class PngHeader {
 	}
 	
 	/**
+	 * This routine is limited to reading a PNG file and saving this image
+	 *  while maintaining all the characteristics.
+	 * 
+	 * @param img	Access to each of the 3 routines: ICO, ICNS and PNG.
+	 * @param offset	The reading position.
+	 * @param size	Number of bytes to be passed.
+	 * @return	Image with an accessible buffer of image data.
+	 */
+	public BufferedImage createPng(DiskIcons img, int offset, int size) throws IOException {
+		img.getMedia().seek(offset);
+		byte[] data = new byte[size];
+		img.getMedia().read(data);
+		return ImageIO.read(new ByteArrayInputStream(data));
+	}
+	
+	/**
 	 * This routine is limited to passing PNG bytes from one side to the other.
 	 * 
 	 * @param from	Read access to RandomAccessFile.
@@ -176,7 +208,7 @@ class PngHeader {
 	 * @param to	RandomAccessFile write access.
 	 * @param size	Number of bytes to be passed.
 	 */
-	public void WriteImage(RandomAccessFile from, int original, RandomAccessFile to, int size) throws IOException {
+	public void writeImage(RandomAccessFile from, int original, RandomAccessFile to, int size) throws IOException {
 		byte[] buffer = new byte[8];
 		ByteBuffer tr = null;
 		from.seek(original);
@@ -196,5 +228,5 @@ class PngHeader {
 			to.write(detail);
 		}
 	}
-
+	
 }

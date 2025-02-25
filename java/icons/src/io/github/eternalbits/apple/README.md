@@ -17,7 +17,7 @@ number of icons.
 
 Leaving aside the icons with less than 8 bits for each of the 4 colors, 
 we are left with the following formats:
-- The 24-bit RGB icon (example icl4) plus the 8-bit mask (example l8mk)
+- The 24-bit RGB icon (example il32) plus the 8-bit mask (example l8mk)
 - The JPEG 2000 (JP2) icon, this is an icon that we will NOT deal with
 - The PNG icon (example icp4), this is an icon we will deal with
 - The 32-bit ARGB icon (example ic04)

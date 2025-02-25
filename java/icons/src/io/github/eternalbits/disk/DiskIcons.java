@@ -42,10 +42,14 @@ public abstract class DiskIcons implements AutoCloseable {
 	}
 	
 	public abstract List<DiskIconsView> getFiles();		// Represents the structure of an icon through repeated DiskIconsView input.
-	public DiskImageView getView() {
+	
+	public DiskImageView getView() {					// Accessing an icon's structure through repeated DiskIconsView entries
 		return new DiskImageView(this);
 	}
-
+	public DiskImageShow getShow() {					// Accessing an icon's view through repeated DiskIconsShow entries
+		return new DiskImageShow(this);
+	}
+	
 	protected String path = null;						// Converts this abstract pathname into a pathname string.
 	public String getPath() {
 		return path;

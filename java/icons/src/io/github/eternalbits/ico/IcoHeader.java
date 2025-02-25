@@ -23,11 +23,10 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.eternalbits.apple.AppHeader;
+import io.github.eternalbits.bitmap.MapHeader;
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.disk.WrongHeaderException;
-import io.github.eternalbits.icns.IcnsHeader;
 import io.github.eternalbits.icons.Static;
 import io.github.eternalbits.png.PngFiles;
 import io.github.eternalbits.png.PngHeader;
@@ -40,10 +39,10 @@ class IcoHeader {
 	static final int HEADER_SIZE = 6;
 	
 	private final PngHeader img;	// Parent object to associated PNG
-	private final AppHeader app;	// Parent object to associated APPLE and ARGB
+	private final MapHeader map;	// Parent object to associated BITMAP
 	
 	List<DiskIconsView> disk = new ArrayList<DiskIconsView>();
-
+	
 	short	alwaysBe0;				// Reserved, must always be 0
 	short	signature;				// Specifies image type 1 for icon, lsb first
 	short	number;					// Specifies number of images in the file, lsb first
@@ -74,17 +73,20 @@ class IcoHeader {
 	 * Microsoft ICO file writing routine.
 	 * <p>
 	 */
-	IcoHeader(IcoFiles ico, DiskIcons image) throws IOException {
+	IcoHeader(IcoFiles ico, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		img = new PngHeader();
-		app = new AppHeader();
+		map = new MapHeader();
 		if (image.getFiles() == null) return;
+		if (Static.delimiterIcon(icon, image))
+			throw new WrongHeaderException(getClass(), ico.getPath());
 		
 		/**
 		 * Start by searching the available icons
 		 */
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, MASK, ARGB
+			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+				fs.forIcon = fs.layout.endsWith("PNG")? DiskIcons.ICON_PNG: DiskIcons.ICON_BITMAP;
 				local.add(fs);
 			}
 		}
@@ -111,31 +113,16 @@ class IcoHeader {
 		 * Then write the icons
 		 */
 		for (DiskIconsView fs: local) {
-			if (fs.isIcon == DiskIcons.ICON_PNG) {
-				img.WriteImage(from, fs.offset, to, fs.length);
+			int power = Static.getInteger(fs.layout);
+			if (fs.isIcon == DiskIcons.ICON_PNG && fs.forIcon == DiskIcons.ICON_PNG) {
+				img.writeImage(from, fs.offset, to, fs.length);							// Passing bytes PNG from one side to the other
 			}
-			else
-			if (fs.isIcon == DiskIcons.ICON_BITMAP) {
-				app.WriteImage(from, fs.offset, to, fs.length);
+			else 
+			if (fs.forIcon == DiskIcons.ICON_BITMAP) {
+				fs.length = map.writeBitmap(fs.image, to, power);						// Passing bytes from a saved image to a bitmap
 			}
-			else
-			if (fs.isIcon == DiskIcons.ICON_APPLE) {
-				int power = Static.getInteger(fs.layout);
-				String mask = IcnsHeader.OSMask(fs.type);
-				byte[] source = new byte[4 * power * power];
-				for (DiskIconsView fm: image.getFiles()) {	// searches for the respective bitmap
-					if (fm.type.equals(mask)) {
-						source = app.MaskToBitmap(from, fm.offset, fm.length, source);
-						break;
-					}
-				}
-				fs.length = app.AppleToBitmap(from, fs.offset, to, fs.length, power, source);
-			}
-			else
-			if (fs.isIcon == DiskIcons.ICON_ARGB) {
-				int power = Static.getInteger(fs.layout);
-				byte[] source = new byte[4 * power * power];
-				fs.length = app.ArgbToBitmap(from, fs.offset, to, fs.length, power, source);
+			else {
+				fs.length = map.writePng(fs.image, to);									// Passing bytes from a saved image to PNG
 			}
 		}
 		
@@ -167,7 +154,7 @@ class IcoHeader {
 	 */
 	IcoHeader(IcoFiles ico, ByteBuffer in) throws IOException, WrongHeaderException {
 		img = new PngHeader();
-		app = new AppHeader();
+		map = new MapHeader();
 		
 		if (in.remaining() >= HEADER_SIZE) {
 			in.order(IcoFiles.BYTE_ORDER);
@@ -176,7 +163,7 @@ class IcoHeader {
 			signature			= in.getShort();
 			number				= in.getShort();
 			
-			if (alwaysBe0 == 0 && signature == 1) {
+			if (alwaysBe0 == 0 && signature == 1 && number > 0 && number < 256) {
 				
 				long offset = HEADER_SIZE;
 				ByteBuffer tr = null;
@@ -205,18 +192,24 @@ class IcoHeader {
 					view.description = dirEntry();
 					
 					tr = ico.readIcon(position, 8).order(ByteOrder.BIG_ENDIAN);
-					if (tr.getInt(0) == PngFiles.ICON_PGN && tr.getInt(4) == PngFiles.DOS_UNIX) { // %PNG....
+					if (tr.limit() >= 8 && tr.getInt(0) == PngFiles.ICON_PGN && tr.getInt(4) == PngFiles.DOS_UNIX) { // %PNG....
 						view.isIcon = DiskIcons.ICON_PNG;
 						view.description = img.ImageHeader(ico, position + 8, size);
+						view.image = img.createPng(ico, view.offset, view.length);
 						view.layout = view.description;
 					} else {
 						tr.order(ByteOrder.LITTLE_ENDIAN);
-						if (tr.getInt(0) == 40) { // BITMAP
+						if (tr.limit() >= 8 && tr.getInt(0) == 40) { // BITMAP
 							if (width == 0 && height == 0)  // width and height = 0
 								view.description = tr.getInt(4) + view.description.substring(1);
 							view.layout = view.description.replaceFirst(" RGBA?", "");
-							if (view.layout.endsWith("32-bit"))
-								view.isIcon = DiskIcons.ICON_BITMAP;
+							
+							int power = Static.getInteger(view.layout);
+							if (view.length == Static.bitmapRound(power)) {
+								view.image = map.createBitmap(ico.getMedia(), view.offset, view.length, power);
+								if (view.image != null)
+									view.isIcon = DiskIcons.ICON_BITMAP;
+							}
 						}
 					}
 					disk.add(view);
