@@ -187,15 +187,6 @@ class IcnsHeader {
 		return ms_type;
 	}
 	
-	public static String OSMask(String type) {
-		for (OSMatch array : osMatch) {
-			if (array.type.equals(type)) {
-				return array.mask;
-			}
-		}
-		return null;
-	}
-	
 	/**
 	 * Apple ICNS file writing routine.
 	 * <p>
@@ -396,7 +387,7 @@ class IcnsHeader {
 				for (DiskIconsView fs: disk) {
 					if (fs.isIcon == DiskIcons.ICON_APPLE) {
 						fs.isIcon = DiskIcons.NOT_AN_ICON;
-						String[] fs_type = OSMatch(fs.layout, fs.type);
+						String[] fs_type = OSMatch(fs.layout, fs.type);					// Search for fs.type and fs.mask in OSMatch according to fs.layout
 						if (fs_type != null && fs_type[2] != null) {					// If found the result cannot be null
 							for (DiskIconsView fm: disk) {								// searches for the respective bitmap
 								if (fm.type.equals(fs_type[2])) {

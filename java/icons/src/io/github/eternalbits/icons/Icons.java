@@ -93,7 +93,7 @@ public class Icons {
 	private final static String INCORRECT_COMMAND = "The syntax of the command is incorrect.";
 	private final static String TOO_MANY_OPTIONS = "There are too many options: %s.";
 	
-	private static final String version = "1.1";
+	private static final String version = "1.2";
 	private static final String year = "-2025";
 	private static final String jar = new java.io.File(Icons.class.getProtectionDomain()
 			.getCodeSource().getLocation().getPath()).getName();
@@ -260,8 +260,8 @@ public class Icons {
 		final String prefix = "--";
 		String header = "\nTo convert ICO to ICNS disk images. Version "+version+"\n\n";
 		String footer = ("\nOne of ^copy or ^dump is required. ^icon can be a phrase like"
-				+ " 1=ic13:png;2=ic11:png;3=ic04:bit;4=ic07:png for ICNS or"
-				+ " 0=png;1=png;2=*;3=*;4=png;5=*;6=*;7=bit for ICO\n").replace("^", prefix);
+				+ " 0=png;1=png;2=*;3=*;4=png;5=*;6=*;7=bit for ICO or"
+				+ " 1=ic13:png;2=ic11:png;3=ic04:bit;4=png for ICNS\n").replace("^", prefix);
 		formatter.setLongOptPrefix(" "+prefix);
 		formatter.printHelp("java -jar "+jar, header, options, footer, true);
 	}
