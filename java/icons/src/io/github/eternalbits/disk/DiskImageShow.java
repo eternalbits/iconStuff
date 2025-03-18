@@ -63,7 +63,6 @@ public class DiskImageShow {
 				show.length		= fs.length;
 				show.type		= fs.type;
 				show.description= fs.description;
-				show.layout		= fs.layout;
 				show.image		= fs.image == null? null: "Buffered " + fs.image.getWidth() + 
 						(fs.image.getWidth() != fs.image.getHeight()? "x" + fs.image.getHeight(): "");
 				local.add(show);
@@ -77,10 +76,9 @@ public class DiskImageShow {
 		public String			isIcon;				// This is the type of icon input that goes from NOT_AN_ICON to ICON_ARGB
 		public int				offset;				// The offset goes from the beginning of the file to the beginning of the icon
 		public int				length;				// Icon length, in bytes
-		public String			type;				// The type can be PNG, ICO or a character set from the Apple Macintosh
+		public String			type;				// The type can be PNG, ICO or a character set from the Apple macOS
 		public String			description;		// A brief description of the icon for the viewer
-		public String			layout;				// A detailed description for programming
-		public String			image;				// A PNG image when the source is not PNG
+		public String			image;				// A PNG image
 		
 	}
 	

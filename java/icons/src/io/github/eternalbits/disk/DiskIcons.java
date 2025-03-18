@@ -85,7 +85,8 @@ public abstract class DiskIcons implements AutoCloseable {
 	/**
 	 * The close() method of an AutoCloseable object is called automatically when
 	 *  exiting a try-with-resources block for which the object has been declared
-	 *  in the resource specification header.
+	 *  in the resource specification header. This means that we no longer have access 
+	 *  to the RandomAccessFile, but we do have access to the other variables.
 	 */
 	@Override
 	public synchronized void close() throws IOException {

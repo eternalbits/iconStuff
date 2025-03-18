@@ -63,7 +63,7 @@ class PngHeader {
 		DiskIconsView es = null;
 		int i = 0, m = 0;
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
 				i = Static.getInteger(fs.description);
 				if (i > m) { es = fs; m = i; }
 			}
@@ -73,17 +73,11 @@ class PngHeader {
 		 * If you find any, write them down
 		 */
 		if (es != null) {
-			RandomAccessFile from = image.getMedia();
 			RandomAccessFile to = png.getMedia();
-			if (es.isIcon == DiskIcons.ICON_PNG) {
-				this.writeImage(from, es.offset, to, es.length);							// Passing bytes PNG from one side to the other
-			}
-			else {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();					// Passing bytes from a saved image to PNG
-				ImageIO.write(es.image, "png", baos);
-				to.write(baos.toByteArray());
-				es.length = baos.size();
-			}
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();					// Passing bytes from a saved image to PNG
+			ImageIO.write(es.image, "png", baos);
+			to.write(baos.toByteArray());
+			es.length = baos.size();
 		}
 	}
 	

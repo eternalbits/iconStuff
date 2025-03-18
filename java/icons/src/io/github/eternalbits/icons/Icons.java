@@ -223,6 +223,7 @@ public class Icons {
 					f = Static.getExtension(to).toLowerCase();
 				if (!Arrays.asList(DEFAULT_FILE_FILTER).contains(f))
 					throw new ParseException(INCORRECT_COMMAND);
+				
 				if (cmd.hasOption("i") && cmd.getOptionValues("i").length != 1)
 					throw new ParseException(String.format(TOO_MANY_OPTIONS, "i"));
 								
@@ -258,10 +259,10 @@ public class Icons {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.setSyntaxPrefix("Usage: ");
 		final String prefix = "--";
-		String header = "\nTo convert ICO to ICNS disk images. Version "+version+"\n\n";
+		String header = "\nTo convert ICO to ICNS disk icons. Version "+version+"\n\n";
 		String footer = ("\nOne of ^copy or ^dump is required. ^icon can be a phrase like"
 				+ " 0=png;1=png;2=*;3=*;4=png;5=*;6=*;7=bit for ICO or"
-				+ " 1=ic13:png;2=ic11:png;3=ic04:bit;4=png for ICNS\n").replace("^", prefix);
+				+ " 1=ic13:png;2=ic11:png;3=ic04:bit;4=png for ICNS\n\n").replace("^", prefix);
 		formatter.setLongOptPrefix(" "+prefix);
 		formatter.printHelp("java -jar "+jar, header, options, footer, true);
 	}

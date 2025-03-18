@@ -85,7 +85,7 @@ class IcoHeader {
 		 */
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
 				fs.forIcon = fs.layout.endsWith("PNG")? DiskIcons.ICON_PNG: DiskIcons.ICON_BITMAP;
 				local.add(fs);
 			}
@@ -93,7 +93,6 @@ class IcoHeader {
 		
 		if (local.isEmpty()) return;
 		
-		RandomAccessFile from = image.getMedia();
 		RandomAccessFile to = ico.getMedia();
 		
 		/**
@@ -114,10 +113,6 @@ class IcoHeader {
 		 */
 		for (DiskIconsView fs: local) {
 			int power = Static.getInteger(fs.layout);
-			if (fs.isIcon == DiskIcons.ICON_PNG && fs.forIcon == DiskIcons.ICON_PNG) {
-				img.writeImage(from, fs.offset, to, fs.length);							// Passing bytes PNG from one side to the other
-			}
-			else 
 			if (fs.forIcon == DiskIcons.ICON_BITMAP) {
 				fs.length = map.writeBitmap(fs.image, to, power);						// Passing bytes from a saved image to a bitmap
 			}

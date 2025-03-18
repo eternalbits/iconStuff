@@ -203,12 +203,11 @@ class IcnsHeader {
 		 */
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
 				String[] fs_type = OSMatch(fs.layout, fs.type);			// Search for fs.type and fs.mask in OSMatch according to fs.layout
 				if (fs_type != null) {									// If found the result cannot be null
 					fs.forIcon = Integer.parseInt(fs_type[0]);			// PNG, APPLE, ARGB
 					fs.type = fs_type[1];
-					fs.length += 8;
 					local.add(fs);
 					if (fs_type[2] != null) {							// If fs.mask is not null
 						DiskIconsView fm = new DiskIconsView();			// creates a new DiskIconsView
@@ -227,7 +226,6 @@ class IcnsHeader {
 		
 		if (local.isEmpty()) return;
 		
-		RandomAccessFile from = image.getMedia();
 		RandomAccessFile to = icns.getMedia();
 		
 		/**
@@ -259,38 +257,32 @@ class IcnsHeader {
 		for (DiskIconsView fs: local) {
 			if (fs.isIcon > 0) {	// PNG, APPLE, MASK, ARGB
 				byte[] buffer = null;
-				if (fs.isIcon != DiskIcons.ICON_PNG || fs.forIcon != DiskIcons.ICON_PNG) {
 					
-					int power = Static.getInteger(fs.layout);
-					if (fs.forIcon == DiskIcons.ICON_PNG) {
-						buffer = app.writePng(fs.image);
-						fs.length = buffer.length + 8;
-					}
-					else
-					if (fs.forIcon == DiskIcons.ICON_APPLE) {
-						buffer = app.writeApple(fs.image, power);
-						fs.length = buffer.length + 8;
-					}
-					else
-					if (fs.forIcon == DiskIcons.ICON_MASK) {
-						buffer = app.writeMask(fs.image, power);
-						fs.length = buffer.length + 8;
-					}
-					else
-					if (fs.forIcon == DiskIcons.ICON_ARGB) {
-						buffer = app.writeArgb(fs.image, power);
-						fs.length = buffer.length + 8;
-					}
+				int power = Static.getInteger(fs.layout);
+				if (fs.forIcon == DiskIcons.ICON_APPLE) {
+					buffer = app.writeApple(fs.image, power);
+					fs.length = buffer.length + 8;
+				}
+				else
+				if (fs.forIcon == DiskIcons.ICON_MASK) {
+					buffer = app.writeMask(fs.image, power);
+					fs.length = buffer.length + 8;
+				}
+				else
+				if (fs.forIcon == DiskIcons.ICON_ARGB) {
+					buffer = app.writeArgb(fs.image, power);
+					fs.length = buffer.length + 8;
+				}
+				else {
+					buffer = app.writePng(fs.image);
+					fs.length = buffer.length + 8;
 				}
 				
 				ByteBuffer tw = ByteBuffer.wrap(header).order(IcnsFiles.BYTE_ORDER);
 				tw.put(fs.type.getBytes(StandardCharsets.US_ASCII));
 				tw.putInt(fs.length);
 				to.write(header);
-				
-				if (fs.isIcon == DiskIcons.ICON_PNG && fs.forIcon == DiskIcons.ICON_PNG) 
-					img.writeImage(from, fs.offset, to, fs.length - 8);
-				else to.write(buffer);
+				to.write(buffer);
 				
 			}
 		}

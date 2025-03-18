@@ -102,13 +102,15 @@ public class Static {
 	
 	/**
 	 * Try changing the icon layout. There are several errors in this
-	 *  arrangement, but that is up to you to decide.
+	 *  arrangement, but that is up to you to decide. Either way, 
+	 *  start by resetting all forIcon.
 	 *  
 	 * @param icon	Can be a sentence as indicated in --help.
 	 * @param image	Abstract class that represents a disk icon.
 	 * @return	True if there was an error in the input, false otherwise.
 	 */
 	public static boolean delimiterIcon(String icon, DiskIcons image) {
+		for (DiskIconsView fs: image.getFiles()) fs.forIcon = 0;
 		if (icon != null) {
 			String[] match = icon.split(";");
 			for (int i = 0; i < match.length; i++) {
@@ -131,7 +133,7 @@ public class Static {
 							fs.type = sub[j];
 						else
 						if (sub[j].equals("*"))
-							fs.isIcon = -1;
+							fs.forIcon = -1;
 						else
 							return true;
 					}
@@ -161,6 +163,9 @@ public class Static {
 	 * @param path	The file path.
 	 * @return	The extension or {@code ""}.
 	 */
+	public static String getExtension(String path) {
+		return getExtension(new File(path));
+	}
 	public static String getExtension(File path) {
 		String name = path.getName();
 		String part = name.replaceFirst("([^.]+)[.][^.]+$", "$1");

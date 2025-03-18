@@ -18,11 +18,13 @@ package io.github.eternalbits.disk;
 
 import java.awt.image.BufferedImage;
 
+import io.github.eternalbits.icons.Static;
+
 /**
  * A read and write view of a {@link DiskImageView}. All fields are public.
  * <p>
  */
-public class DiskIconsView {
+public class DiskIconsView implements Comparable<DiskIconsView> {
 	
 	public int				isIcon;				// This is the input icon type that goes from NOT_AN_ICON to ICON_ARGB
 	public int				forIcon;			// This is the output icon type which is PNG, BITMAP, APPLE, MASK, ARGB
@@ -30,7 +32,12 @@ public class DiskIconsView {
 	public int				length;				// Icon length, in bytes
 	public String			type;				// The type can be PNG, ICO or a character set from the Apple macOS
 	public String			description;		// A brief description of the icon for the viewer
-	public String			layout;				// A detailed description for programming 
+	public String			layout;				// A detailed description for programming
 	public BufferedImage	image;				// A PNG image
+	
+	@Override
+	public int compareTo(DiskIconsView other) {
+		return Static.getInteger(other.layout) - Static.getInteger(this.layout);
+	}
 	
 }

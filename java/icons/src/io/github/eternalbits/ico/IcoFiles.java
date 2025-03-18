@@ -78,7 +78,7 @@ public class IcoFiles extends DiskIcons {
 		catch (Exception e) {
 			media.close();
 			throw e;
-		}		
+		}
 	}
 	
 	@Override
