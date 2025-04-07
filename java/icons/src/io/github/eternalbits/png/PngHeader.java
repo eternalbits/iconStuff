@@ -129,7 +129,7 @@ class PngHeader {
 	 */
 	public String ImageHeader(DiskIcons img, int offset, int size) throws IOException, WrongHeaderException {
 		
-		int[]	dim = {0, 0, 0, 0};		// width, height, ppu X, ppu Y
+		int[]	dim = {0, 0};			// width, height
 		int		length = 0;				// Length of chunk, in bytes, msb first
 		int		type = 0;				// Chunk type/name of chunk
 		
@@ -152,10 +152,6 @@ class PngHeader {
 			if (type == 0x49484452) {	// IHDR
 				dim[0] = tr.getInt(4);
 				dim[1] = tr.getInt(8);
-			} else 
-			if (type == 0x70485973) {	// pHYs
-				dim[2] = tr.getInt(4);
-				dim[3] = tr.getInt(8);
 			}
 			
 			crc.reset();
@@ -173,8 +169,6 @@ class PngHeader {
 		String dimension = String.valueOf(dim[0]);
 		if (dim[0] != dim[1])
 			dimension += "x" + String.valueOf(dim[1]);
-		if (dim[2] == dim[3] && dim[3] == 5669)
-			dimension += "²";
 		return dimension + " PNG";
 	}
 	

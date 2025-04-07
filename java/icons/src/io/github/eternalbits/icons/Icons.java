@@ -37,7 +37,7 @@ import org.apache.commons.cli.ParseException;
 
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskImage;
-import io.github.eternalbits.disk.DiskImageView;
+import io.github.eternalbits.disk.DiskImageShow;
 import io.github.eternalbits.disk.WrongHeaderException;
 import io.github.eternalbits.icons.gui.FrontEnd;
 
@@ -52,7 +52,7 @@ public class Icons {
 	private final static String IMAGE_NOT_CREATED = "No icons were created.";
 	
 	/**
-	 * Outputs --dump to a file as described in {@link DiskImageView}.
+	 * Outputs --dump to a file as described in {@link DiskImageShow}.
 	 * 
 	 * @param file	File we want to get a --dump of.
 	 */
@@ -268,7 +268,7 @@ public class Icons {
 	}
 	
 	/**
-	 * Outputs --dump to a file as described in {@link DiskImageView}.
+	 * Outputs --dump to a file as described in {@link DiskImageShow}.
 	 * 
 	 * @param obj	Output object.
 	 */

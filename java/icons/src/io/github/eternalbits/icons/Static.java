@@ -157,6 +157,17 @@ public class Static {
 	}
 
 	/**
+	 * Accepts a {@code path} and returns the extension replaced by {@code ext}.
+	 *
+	 * @param path	The file path.
+	 * @param ext	The replaced extension.
+	 * @return	The replacement.
+	 */
+	public static String replaceExtension(String path, String ext) {
+		return new File(path).getPath().replaceFirst("([^.]+)[.][^.]+$", "$1."+ext);
+	}
+	
+	/**
 	 * Accepts a {@code path} and returns the extension, if extension does not exist
 	 *  returns {@code ""}.
 	 *
@@ -181,10 +192,33 @@ public class Static {
 	 */
 	public static int getInteger(String item) {
 		try {	// tries to return a number, if it fails returns -1
-			return Integer.parseInt(item.split("[ ²]")[0]);
+			return Integer.parseInt(item.split("[ x²]")[0]);
 		} catch (NumberFormatException e) {
 			return -1;
 		}
+	}
+	
+	/**
+	 * A {@code String} {@code item} is a number possibly followed by several letters,
+	 *  from which you simply want to extract the first string.
+	 *
+	 * @param item	Number followed by several letters and numbers.
+	 * @return	Just the string or {@code ""}.
+	 */
+	public static String getSize(String item) {
+		return item.split("[ ²]")[0];
+	}
+	
+	/**
+	 * A {@code String} {@code item} is a number possibly followed by several letters,
+	 *  from which you simply want to extract the second string.
+	 *
+	 * @param item	Number followed by several letters and numbers.
+	 * @return	Just the string or {@code ""}.
+	 */
+	public static String getIcon(String item) {
+		String[] type = item.split(" ");
+		return type.length > 1? type[1]: "";
 	}
 	
 	/**

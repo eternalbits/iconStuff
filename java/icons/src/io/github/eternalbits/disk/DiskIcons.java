@@ -66,6 +66,14 @@ public abstract class DiskIcons implements AutoCloseable {
 		return length;
 	}
 	
+	protected boolean undo = false;						// The current position (undo number).
+	public boolean getUndo() {
+		return undo;
+	}
+	public void setUndo(boolean undo) {
+		this.undo = undo;
+	}
+	
 	/**
 	 * Represents a reading of an icon that is transformed into a ByteBuffer.
 	 *  There is no order as it can be used as LITTLE_ENDIAN or BIG_ENDIAN

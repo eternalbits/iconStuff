@@ -117,8 +117,7 @@ class IcnsHeader {
 	
 	/**
 	 * Here is a list of really interesting icons. We are only interested in
-	 *  PNG icons, ARGB icons, and 24-bit plus 8-bit mask icons. Note that
-	 *  we folded the PNG for "retina" so that it is easy to translate.
+	 *  PNG icons, ARGB icons, and 24-bit plus 8-bit mask icons.
 	 */
 	static private class OSMatch {
 		private String type;
@@ -139,42 +138,30 @@ class IcnsHeader {
 			new OSMatch("ih32", "48 32-bit", 3, "h8mk"),
 			new OSMatch("it32", "128 32-bit", 3, "t8mk"),
 			new OSMatch("icp4", "16 PNG", 1, null),
-			new OSMatch("icp4", "16² PNG", 1, null),
 			new OSMatch("icp4", "16 32-bit", 3, "s8mk"),
 			new OSMatch("icp5", "32 PNG", 1, null),
 			new OSMatch("icp5", "32 32-bit", 3, "l8mk"),
 			new OSMatch("icp6", "48 PNG", 1, null),
 			new OSMatch("ic07", "128 PNG", 1, null),
-			new OSMatch("ic07", "128² PNG", 1, null),
 			new OSMatch("ic08", "256 PNG", 1, null),
 			new OSMatch("ic09", "512 PNG", 1, null),
-			new OSMatch("ic10", "1024² PNG", 1, null),
 			new OSMatch("ic10", "1024 PNG", 1, null),
-			new OSMatch("ic11", "32² PNG", 1, null),
 			new OSMatch("ic11", "32 PNG", 1, null),
-			new OSMatch("ic12", "64² PNG", 1, null),
 			new OSMatch("ic12", "64 PNG", 1, null),
-			new OSMatch("ic13", "256² PNG", 1, null),
 			new OSMatch("ic13", "256 PNG", 1, null),
-			new OSMatch("ic14", "512² PNG", 1, null),
 			new OSMatch("ic14", "512 PNG", 1, null),
 			new OSMatch("ic04", "16 PNG", 1, null),
 			new OSMatch("ic04", "16 32-bit", 5, null),
-			new OSMatch("ic05", "32² PNG", 1, null),
 			new OSMatch("ic05", "32 PNG", 1, null),
 			new OSMatch("ic05", "32 32-bit", 5, null),
 			new OSMatch("icsb", "18 PNG", 1, null),
-			new OSMatch("icsb", "18² PNG", 1, null),
 			new OSMatch("icsb", "18 32-bit", 5, null),
-			new OSMatch("icsB", "36² PNG", 1, null),
 			new OSMatch("icsB", "36 PNG", 1, null),
 			new OSMatch("sb24", "24 PNG", 1, null),
-			new OSMatch("sb24", "24² PNG", 1, null),
-			new OSMatch("SB24", "48² PNG", 1, null),
 			new OSMatch("SB24", "48 PNG", 1, null),
 		};
 	
-	static String[] OSMatch(String match, String type) {
+	public static String[] OSMatch(String match, String type) {
 		String[] ms_type = null;
 		for (OSMatch array : osMatch) {
 			if (array.match.equals(match)) {
@@ -185,6 +172,16 @@ class IcnsHeader {
 			}
 		}
 		return ms_type;
+	}
+	
+	public static ArrayList<String> OSMatch(String match) {
+		ArrayList<String> type = new ArrayList<String>();
+		for (OSMatch array : osMatch) {
+			if (array.match.equals(match)) {
+				type.add(array.type);
+			}
+		}
+		return type;
 	}
 	
 	/**
