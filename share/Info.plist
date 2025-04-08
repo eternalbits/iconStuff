@@ -5,13 +5,13 @@
 		<key>CFBundleDevelopmentRegion</key>		<string>English</string>
 		<key>CFBundleExecutable</key>				<string>universalJavaApplicationStub</string>
 		<key>CFBundleName</key>						<string>Icons</string>
-		<key>CFBundleGetInfoString</key>			<string>Icons version 1.2, Copyright 2024-2025 Rui Baptista</string>
+		<key>CFBundleGetInfoString</key>			<string>Icons version 1.3, Copyright 2024-2025 Rui Baptista</string>
 		<key>CFBundleIconFile</key>					<string>Icons.icns</string>
 		<key>CFBundleIdentifier</key>				<string>eternalbits.icons</string>
 		<key>CFBundleInfoDictionaryVersion</key>	<string>6.0</string>
 		<key>CFBundlePackageType</key>				<string>APPL</string>
-		<key>CFBundleLongVersionString</key>		<string>1.2, Copyright 2024-2025 Rui Baptista</string>
-		<key>CFBundleShortVersionString</key>		<string>1.2</string>
+		<key>CFBundleLongVersionString</key>		<string>1.3, Copyright 2024-2025 Rui Baptista</string>
+		<key>CFBundleShortVersionString</key>		<string>1.3</string>
 		<key>CSResourcesFileMapped</key>			<true/>
 		<key>LSRequiresCarbon</key>					<true/>
 		<key>NSHumanReadableCopyright</key>			<string>Copyright 2024-2025 Rui Baptista</string>

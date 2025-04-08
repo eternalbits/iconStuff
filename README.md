@@ -11,10 +11,12 @@ a screen similar to that of CompactVD.
 "Icons" is primarily a version that allows you to translate from [Microsoft Windows
 ICO](https://en.wikipedia.org/wiki/ICO_(file_format)) to [Apple macOS
 ICNS](https://en.wikipedia.org/wiki/Apple_Icon_Image_format) and vice versa.
-Currently, the application gives up switching between PNG images, as both 
+Currently, the application consists of switching between PNG images, as both 
 functions have this tool, [`Microsoft's bitmap`](https://github.com/eternalbits/iconStuff/tree/main/java/icons/src/io/github/eternalbits/bitmap/)
 that is present in ICO and [`Apple's compression`](https://github.com/eternalbits/iconStuff/tree/main/java/icons/src/io/github/eternalbits/apple/) 
 that is present in ICNS.
+
+The app finally has [a window](https://github.com/eternalbits/iconStuff/releases)!
 
 The --icon parameter means a format of choice for your icons.
 
@@ -46,9 +48,6 @@ The sentence for PNG consists of
 - Number that appears in front of fileIcons
 - Description of the respective icon: PNG or * (it is always the
 largest icon that is selected)
-
-### Future advancements of "Icons":
-- Adding a window.
 
 ### Copyright Notices
 
