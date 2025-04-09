@@ -98,6 +98,9 @@ public class FrontEnd extends JFrame {
 	private JButton settingsButton = null;
 	private JButton aboutButton = null;
 	
+	private ImageIcon iconSave = new ImageIcon(getResource("save.png"));
+	private ImageIcon iconUndo = new ImageIcon(getResource("undo.png"));
+	
 	final DefaultListModel<ListItem> listData = new DefaultListModel<ListItem>();
 	final JList<ListItem> list = new JList<ListItem>(listData);
 	
@@ -394,6 +397,7 @@ public class FrontEnd extends JFrame {
 					listData.set(i, new ListItem(this, image, file));
 					list.setSelectedIndex(i);
 					updateDiskIcon();
+					saveButton(i);
 					
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(this, 
@@ -453,15 +457,33 @@ public class FrontEnd extends JFrame {
 	void onSelectListItem() {
 		int s = list.getSelectedIndex();
 		boolean sel = s != -1;
-		if (sel)
+		if (sel) {
 			view.doRepaint(listData.get(s));
-		else about.requestFocusInWindow();
-		deck.show(main, sel? "view": "about");
-		saveButton.setEnabled(sel);
+			deck.show(main, "view");
+			saveButton(s);
+		} else {
+			about.requestFocusInWindow();
+			saveButton.setIcon(iconSave);
+			saveButton.setEnabled(false);
+			deck.show(main, "about");
+		}
 		saveAsButton.setEnabled(sel);
 		aboutButton.setEnabled(sel);
 	}
 
+	/**
+	 * Treat saveButton according to undo.
+	 */
+	void saveButton() {
+		int s = list.getSelectedIndex();
+		if (s != -1) saveButton(s);
+	}
+	private void saveButton(int s) {
+		boolean undo = listData.get(s).getUndo();
+		saveButton.setIcon(undo? iconUndo: iconSave);
+		saveButton.setEnabled(undo);
+	}
+	
 	/**
 	 * First, the screen that mostly intersects the window is selected. 
 	 *  Then, if necessary, the window is moved and resized to entirely

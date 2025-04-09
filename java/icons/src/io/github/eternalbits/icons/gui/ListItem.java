@@ -62,6 +62,7 @@ class ListItem {
 	}
 	void setUndo(boolean undo) {
 		image.setUndo(undo);
+		app.saveButton();
 	}
 	
 	/**
@@ -101,11 +102,12 @@ class ListItem {
 	 * @param icon	A list with the icon and output.
 	 */
 	void copy(File to, String type, String icon ) {
-		String result = image.getPath().equals(to.getPath()) ? "changed" : "created";
+		boolean save = image.getPath().equals(to.getPath());
 		File copy = null;
 		try (DiskIcons clone = DiskImage.create(type, to, image, type.equals("ICO") ? icon : null)) {
-			image.setUndo(false);
 			copy = to; // copy open by DiskImage
+			if (save) 
+				image.setUndo(false);
 		} catch (IOException | WrongHeaderException e) {
 			e.printStackTrace();
 		}
@@ -114,6 +116,7 @@ class ListItem {
 				if (copy.isFile() && copy.length() == 0) 
 					copy.delete();
 				else app.addToList(to);
+				String result = save ? "changed" : "created";
 				System.out.println(to != null && to.isFile()? String.format(app.res.getString("image_"+result), 
 						to.getName(), to.getAbsoluteFile().getParent()): app.res.getString("image_not_"+result));
 			}
