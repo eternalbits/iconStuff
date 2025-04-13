@@ -16,6 +16,7 @@
 
 package io.github.eternalbits.ico;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -86,6 +87,8 @@ class IcoHeader {
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
 			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
+				if (fs.size == 0)
+					fs.size = Static.getInteger(fs.layout);
 				fs.forIcon = fs.layout.endsWith("PNG")? DiskIcons.ICON_PNG: DiskIcons.ICON_BITMAP;
 				local.add(fs);
 			}
@@ -112,12 +115,14 @@ class IcoHeader {
 		 * Then write the icons
 		 */
 		for (DiskIconsView fs: local) {
-			int power = Static.getInteger(fs.layout);
+			BufferedImage fs_image = Static.copyPng(fs.image, fs.size, fs.layout);
+			int power = fs.size;
+			
 			if (fs.forIcon == DiskIcons.ICON_BITMAP) {
-				fs.length = map.writeBitmap(fs.image, to, power);						// Passing bytes from a saved image to a bitmap
+				fs.length = map.writeBitmap(fs_image, to, power);						// Passing bytes from a saved image to a bitmap
 			}
 			else {
-				fs.length = map.writePng(fs.image, to);									// Passing bytes from a saved image to PNG
+				fs.length = map.writePng(fs_image, to);									// Passing bytes from a saved image to PNG
 			}
 		}
 		

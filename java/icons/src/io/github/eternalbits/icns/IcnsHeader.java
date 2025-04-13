@@ -16,6 +16,7 @@
 
 package io.github.eternalbits.icns;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -201,7 +202,10 @@ class IcnsHeader {
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
 			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
-				String[] fs_type = OSMatch(fs.layout, fs.type);			// Search for fs.type and fs.mask in OSMatch according to fs.layout
+				if (fs.size == 0)
+					fs.size = Static.getInteger(fs.layout);
+				String fs_layout = fs.size+" "+Static.getIcon(fs.layout);
+				String[] fs_type = OSMatch(fs_layout, fs.type);			// Search for fs.type and fs.mask in OSMatch according to fs.layout
 				if (fs_type != null) {									// If found the result cannot be null
 					fs.forIcon = Integer.parseInt(fs_type[0]);			// PNG, APPLE, ARGB
 					fs.type = fs_type[1];
@@ -210,6 +214,7 @@ class IcnsHeader {
 						DiskIconsView fm = new DiskIconsView();			// creates a new DiskIconsView
 						fm.forIcon = DiskIcons.ICON_MASK;				// MASK
 						fm.type = fs_type[2];
+						fm.size = fs.size;
 						fm.isIcon = fs.isIcon;
 						fm.offset = fs.offset;
 						fm.length = fs.length;
@@ -253,25 +258,26 @@ class IcnsHeader {
 		 */
 		for (DiskIconsView fs: local) {
 			if (fs.isIcon > 0) {	// PNG, APPLE, MASK, ARGB
+				BufferedImage fs_image = Static.copyPng(fs.image, fs.size, fs.layout);
 				byte[] buffer = null;
-					
-				int power = Static.getInteger(fs.layout);
+				
+				int power = fs.size;
 				if (fs.forIcon == DiskIcons.ICON_APPLE) {
-					buffer = app.writeApple(fs.image, power);
+					buffer = app.writeApple(fs_image, power);
 					fs.length = buffer.length + 8;
 				}
 				else
 				if (fs.forIcon == DiskIcons.ICON_MASK) {
-					buffer = app.writeMask(fs.image, power);
+					buffer = app.writeMask(fs_image, power);
 					fs.length = buffer.length + 8;
 				}
 				else
 				if (fs.forIcon == DiskIcons.ICON_ARGB) {
-					buffer = app.writeArgb(fs.image, power);
+					buffer = app.writeArgb(fs_image, power);
 					fs.length = buffer.length + 8;
 				}
 				else {
-					buffer = app.writePng(fs.image);
+					buffer = app.writePng(fs_image);
 					fs.length = buffer.length + 8;
 				}
 				

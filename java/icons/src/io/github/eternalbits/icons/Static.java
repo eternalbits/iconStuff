@@ -16,6 +16,8 @@
 
 package io.github.eternalbits.icons;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
@@ -62,6 +64,26 @@ public class Static {
 				tw.putInt(i, bitmap[j]);
 		}
 		return buffer;
+	}
+	
+	/**
+	 * I was hoping this would be easier, but this is how others figured out how to
+	 *  change the length.
+	 * 
+	 * @param image		A PNG image with a DataBuffer.
+	 * @param power		The length of one side.
+	 * @param layout	A detailed description.
+	 * @return	A PNG image already with the new length.
+	 */
+	public static BufferedImage copyPng(BufferedImage image, int power, String layout) {
+		if (power == getInteger(layout))
+			return image;
+		Image img = image.getScaledInstance(power, power, Image.SCALE_DEFAULT);
+		BufferedImage bi = new BufferedImage(power, power, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = bi.createGraphics();
+		g2d.drawImage(img, 0, 0, null);
+		g2d.dispose();
+		return bi;
 	}
 	
 	/**
@@ -128,6 +150,9 @@ public class Static {
 						else
 						if (sub[j].toLowerCase().equals("bit"))
 							fs.layout = getInteger(fs.layout) + " 32-bit";
+						else
+						if (getInteger(sub[j]) != -1)
+							fs.size = getInteger(sub[j]);
 						else
 						if (sub[j].length() == 3 || sub[j].length() == 4)
 							fs.type = sub[j];

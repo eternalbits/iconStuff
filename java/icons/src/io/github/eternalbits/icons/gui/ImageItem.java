@@ -44,7 +44,7 @@ public class ImageItem extends JPanel {
 	private static final long serialVersionUID = 8178977464035716981L;
 
 	private final String[] sz_type = {"ICO", "PNG"};
-//	private final String[] sz_size = {"1024", "512", "256", "128", "64", "48", "40", "36", "32", "24", "20", "18", "16"};
+	private final String[] sz_size = {"1024", "512", "256", "128", "64", "48", "40", "36", "32", "24", "20", "18", "16"};
 	private final String[] sz_icon = {"PNG", "32-bit"};
 	
 	private JLabel st_image;
@@ -62,15 +62,14 @@ public class ImageItem extends JPanel {
 		this.image = image;
 		this.canvas = canvas;
 		this.fs = fs;
-		Dimension dim = new Dimension(fs.image.getWidth() > 256? 256: fs.image.getWidth(), fs.image.getHeight() > 256? 256: fs.image.getHeight());
+		Dimension dim = new Dimension(fs.size > 256? 256: fs.size, fs.size > 256? 256: fs.size);
 		st_image = new JLabel(new ImageIcon(fs.image.getScaledInstance(dim.width, dim.height, Image.SCALE_DEFAULT)));			
 		String fs_size = Static.getSize(fs.layout);
 		String fs_icon = Static.getIcon(fs.layout);
-		String[] sz_size = {fs_size};
-		cb_type = new JComboBox<String>(copyIcns(fs.layout));
+		cb_type = new JComboBox<String>(copyIcns(fs.size+" "+fs_icon));
 		cb_type.setSelectedItem(fs.type);
-		cb_size = new JComboBox<String>(sz_size);
-		cb_size.setSelectedItem(fs_size);
+		cb_size = new JComboBox<String>(copySize(fs_size));
+		cb_size.setSelectedItem(String.valueOf(fs.size));
 		cb_icon = new JComboBox<String>(sz_icon);
 		cb_icon.setSelectedItem(fs_icon);
 		
@@ -86,7 +85,7 @@ public class ImageItem extends JPanel {
 		cb_size.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fs.layout = cb_size.getSelectedItem()+" "+Static.getIcon(fs.layout);
+				fs.size = Integer.parseInt(cb_size.getSelectedItem().toString());
 				canvas.doRepaint(image);
 				image.setUndo(true);
 			}
@@ -110,6 +109,15 @@ public class ImageItem extends JPanel {
 		ArrayList<String> type = IcnsHeader.OSMatch(layout);
 		type.add(0, sz_type[0]);
 		type.add(type.size(), sz_type[1]);
+		return type.toArray(new String[0]);
+	}
+	
+	private String[] copySize(String fs_size) {
+		ArrayList<String> type = new ArrayList<String>();
+		int size = Integer.parseInt(fs_size);
+		for (String st: sz_size) 
+			if (Integer.parseInt(st) <= size)
+				type.add(st);
 		return type.toArray(new String[0]);
 	}
 	

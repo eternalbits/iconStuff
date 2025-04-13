@@ -30,6 +30,7 @@ public class DiskIconsView implements Comparable<DiskIconsView> {
 	public int				forIcon;			// This is the output icon type which is PNG, BITMAP, APPLE, MASK, ARGB
 	public int				offset;				// The offset goes from the beginning of the file to the beginning of the icon
 	public int				length;				// Icon length, in bytes
+	public int				size;				// Image size while changing
 	public String			type;				// The type can be PNG, ICO or a character set from the Apple macOS
 	public String			description;		// A brief description of the icon for the viewer
 	public String			layout;				// A detailed description for programming
