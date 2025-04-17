@@ -17,8 +17,15 @@
 package io.github.eternalbits.icons.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +35,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 
+import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.icons.Static;
 
@@ -37,7 +47,8 @@ class ImageCanvas extends JPanel {
 	
 	private final JPanel panel = new JPanel();
 	private final JScrollPane scroll = new JScrollPane(panel);
-	
+
+	JMenuItem paste = new JMenuItem();
 	private ImageItem[] ic_item;
 	private String icon = null;
 	
@@ -49,6 +60,7 @@ class ImageCanvas extends JPanel {
 	private int allCombo = 72;
 	
 	private final FrontEnd app;
+	private ListItem image;
 	
 	ImageCanvas(FrontEnd frontEnd) {
 		app = frontEnd;
@@ -59,6 +71,7 @@ class ImageCanvas extends JPanel {
 	}
 	
 	void doRepaint(ListItem image) {
+		this.image = image;
 		if (ic_item != null) 
 		for (int i = 0; i < ic_item.length; i++) {
 			panel.remove(ic_item[i]);
@@ -74,13 +87,15 @@ class ImageCanvas extends JPanel {
 				int ico = -1;
 				if (fs.size == 0)
 					fs.size = Static.getInteger(fs.layout);
-				int size = Static.getInteger(fs.layout);
-				if (app.settings.ignoreIconsLarger256) {
-					if (size > 256) ico = i;
-				}
-				if (app.settings.ignoreDuplicateIcons) {
-					for (DiskIconsView fm: local) {
-						if (size == Static.getInteger(fm.layout)) ico = i;
+				if (fs.offset != 0 && fs.length != 0) {
+					int size = Static.getInteger(fs.layout);
+					if (app.settings.ignoreIconsLarger256) {
+						if (size > 256) ico = i;
+					}
+					if (app.settings.ignoreDuplicateIcons) {
+						for (DiskIconsView fm: local) {
+							if (size == Static.getInteger(fm.layout)) ico = i;
+						}
 					}
 				}
 				if (ico == i) {
@@ -119,8 +134,46 @@ class ImageCanvas extends JPanel {
 	 */
 	void setComponentPopupMenu() {
 		final JPopupMenu popup = new JPopupMenu();
+		pasteComponentPopupMenu(popup);
 		adjustComponentPopupMenu(popup);
 		panel.setComponentPopupMenu(popup);
+	}
+	
+	/**
+	 * Adjust the PopupMenu with its dependencies under the ImageCanvas source
+	 * 
+	 * @param popup	The name of the menu.
+	 */
+	void pasteComponentPopupMenu(JPopupMenu popup) {
+		paste = new JMenuItem(app.res.getString("paste"));
+		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+
+		Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
+		paste.setEnabled(t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor));
+		popup.add(paste);
+		
+		paste.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
+				if (t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor))
+					try {
+						DiskIconsView fs = new DiskIconsView();
+						fs.image = (BufferedImage) t.getTransferData(DataFlavor.imageFlavor);
+						fs.layout = fs.image == null? null: fs.image.getWidth() + (fs.image.getWidth() != 
+								fs.image.getHeight()? "x" + fs.image.getHeight(): "") + " PNG";
+						fs.description = fs.layout;
+						fs.isIcon = DiskIcons.ICON_PNG;
+						fs.type = "PNG";
+						image.putIcon(fs);
+						image.setUndo(true);
+						doRepaint(image);
+						
+					} catch (UnsupportedFlavorException | IOException p) {
+						p.printStackTrace();
+					}
+			}
+		});
 	}
 	
 	/**
@@ -132,6 +185,7 @@ class ImageCanvas extends JPanel {
 		final JMenuItem refresh = new JMenuItem(app.res.getString("refresh"));
 		final JMenuItem close = new JMenuItem(app.res.getString("close"));
 		
+		popup.add(new JSeparator());
 		popup.add(refresh);
 		popup.add(close);
 

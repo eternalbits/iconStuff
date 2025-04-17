@@ -133,7 +133,7 @@ class IcoHeader {
 		int offset = HEADER_SIZE + 16 * local.size();
 		tw = ByteBuffer.wrap(structure).order(IcoFiles.BYTE_ORDER);
 		for (DiskIconsView fs: local) {
-			int power = Static.getInteger(fs.layout);
+			int power = fs.size;
 			tw.put((byte) power);
 			tw.put((byte) power);
 			tw.put((byte) 0);

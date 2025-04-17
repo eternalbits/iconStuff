@@ -24,6 +24,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import io.github.eternalbits.disk.DiskIcons;
+import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.disk.DiskImage;
 import io.github.eternalbits.disk.DiskImageView;
 import io.github.eternalbits.disk.WrongHeaderException;
@@ -51,6 +52,10 @@ class ListItem {
 	
 	DiskImageView getView() {
 		return image.getView();
+	}
+	
+	void putIcon(DiskIconsView fs) {
+		image.putIcon(fs);
 	}
 	
 	File getFile() {

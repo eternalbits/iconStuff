@@ -18,6 +18,7 @@ package io.github.eternalbits.icons.gui;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -164,14 +164,26 @@ public class ImageItem extends JPanel {
 	 */
 	void setComponentPopupMenu() {
 		final JPopupMenu popup = new JPopupMenu();
+		final JMenuItem copy = new JMenuItem(app.res.getString("copy"));
+		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 		final JMenuItem delete = new JMenuItem(app.res.getString("delete"));
 		delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 		
+		popup.add(copy);
+		canvas.pasteComponentPopupMenu(popup);
 		popup.add(delete);
-		popup.add(new JSeparator());
 		canvas.adjustComponentPopupMenu(popup);
 		setComponentPopupMenu(popup);
 
+		copy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new ImageSelection(fs.image), null);
+				if (!canvas.paste.isEnabled())
+					setComponentPopupMenu();
+			}
+		});
+		
 		delete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

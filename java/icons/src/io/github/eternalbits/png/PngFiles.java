@@ -88,6 +88,11 @@ public class PngFiles extends DiskIcons {
 	}
 	
 	@Override
+	public void putIcon(DiskIconsView fs) {
+		header.disk.add(fs);
+	}
+	
+	@Override
 	public void setType() {
 		type = "PNG";
 	}

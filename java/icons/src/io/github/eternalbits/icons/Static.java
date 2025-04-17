@@ -132,18 +132,42 @@ public class Static {
 	 * @return	True if there was an error in the input, false otherwise.
 	 */
 	public static boolean delimiterIcon(String icon, DiskIcons image) {
-		for (DiskIconsView fs: image.getFiles()) fs.forIcon = 0;
+		BufferedImage max = null;	// Try to save the largest number
+		int m = -1;
+		for (DiskIconsView fs: image.getFiles()) {
+			if (fs.layout != null && getInteger(fs.layout) > m) {
+				m = getInteger(fs.layout);
+				max = fs.image;
+			}
+			fs.forIcon = 0;
+		}
 		if (icon != null) {
-			String[] match = icon.split(";");
-			for (int i = 0; i < match.length; i++) {
-				String[] sub = match[i].split("=");
-				try {	// tries to return a number, if it fails returns false
-					int p = Integer.parseInt(sub[0]);
-					//	returns false if the index does not prescribe or has more than one equal
-					if (p < 0 || p >= image.getFiles().size() || sub.length > 2)
-						return true;
+			try {	// this routine fails if there is any array index out of bounds exception
+				String[] match = icon.split(";");
+				for (int i = 0; i < match.length; i++) {
+					String[] sub = match[i].split("=");
+					DiskIconsView fs;
+					
+					try {	// tries to return a number, if it fails it keeps the highest number
+						int p = Integer.parseInt(sub[0]);
+						//	returns false if the index does not prescribe or has more than one equal
+						if (p < 0 || p >= image.getFiles().size() || sub.length > 2)
+							return true;
+						fs = image.getFiles().get(p);
+					} catch (NumberFormatException e) {
+						if (m == -1 || sub.length > 2)
+							return true;
+						fs = new DiskIconsView();
+						fs.image = max;
+						fs.layout = fs.image == null? null: fs.image.getWidth() + (fs.image.getWidth() != 
+								fs.image.getHeight()? "x" + fs.image.getHeight(): "") + " PNG";
+						fs.description = fs.layout;
+						fs.isIcon = DiskIcons.ICON_PNG;
+						fs.type = "PNG";
+						image.putIcon(fs);
+					}
+					
 					sub = sub[1].split(":");
-					DiskIconsView fs = image.getFiles().get(p);
 					for (int j = 0; j < sub.length; j++) {
 						if (sub[j].toLowerCase().equals("png"))
 							fs.layout = getInteger(fs.layout) + " PNG";
@@ -162,9 +186,9 @@ public class Static {
 						else
 							return true;
 					}
-				} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-					return true;
 				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				return true;
 			}
 		}
 		return false;

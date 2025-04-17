@@ -7,7 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="src" path="lib"/>
-	<classpathentry kind="lib" path="C:/Users/Rui/Projectos/GitHub/iconStuff/java/icons/lib/commons-cli-1.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

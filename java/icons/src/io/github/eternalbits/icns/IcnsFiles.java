@@ -90,6 +90,11 @@ public class IcnsFiles extends DiskIcons {
 	}
 	
 	@Override
+	public void putIcon(DiskIconsView fs) {
+		header.disk.add(fs);
+	}
+	
+	@Override
 	public void setType() {
 		type = "ICNS";
 	}

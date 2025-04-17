@@ -260,9 +260,9 @@ public class Icons {
 		formatter.setSyntaxPrefix("Usage: ");
 		final String prefix = "--";
 		String header = "\nTo convert ICO to ICNS disk icons. Version "+version+"\n\n";
-		String footer = ("\nOne of ^copy or ^dump is required. ^icon can be a phrase like"
-				+ " 0=png;1=png;2=*;3=*;4=png;5=*;6=*;7=bit for ICO or"
-				+ " 1=ic13:png;2=ic11:png;3=ic04:bit;4=png for ICNS\n\n").replace("^", prefix);
+		String footer = ("\nOne of ^copy or ^dump is required\n^icon can be a phrase like\n"
+				+ "2=bit;3=*;4=64:bit;?=48:bit;?=24:bit for ICO or\n"
+				+ "1=ic05:png;2=ic04:bit;3=*;?=128:png for ICNS\n\n").replace("^", prefix);
 		formatter.setLongOptPrefix(" "+prefix);
 		formatter.printHelp("java -jar "+jar, header, options, footer, true);
 	}
