@@ -390,7 +390,7 @@ public class FrontEnd extends JFrame {
 	void refresh(int i) {
 		if (list.getSelectedIndex() != -1) {
 			
-			if (listData.get(i).stopRun(view.getIcon(), false)) {
+			if (listData.get(i).stopRun(view.getIcon(), i, false)) {
 				File file = listData.get(i).getFile();
 				
 				try (DiskIcons image = DiskImage.open(file, "r")) {
@@ -414,7 +414,7 @@ public class FrontEnd extends JFrame {
 	void close(int i) {
 		if (list.getSelectedIndex() != -1) {
 			
-			if (listData.get(i).stopRun(view.getIcon(), false)) {
+			if (listData.get(i).stopRun(view.getIcon(), i, false)) {
 				listData.remove(i);
 				if (listData.size() > 0) {
 					if (i == listData.size())
@@ -435,7 +435,7 @@ public class FrontEnd extends JFrame {
 	 */
 	boolean canCloseNow() {
 		for (int i = 0, s = listData.getSize(); i < s; i++) {
-			if (!listData.get(i).stopRun(view.getIcon(), true)) {
+			if (!listData.get(i).stopRun(view.getIcon(), i, true)) {
 				return false;
 			}
 		}
@@ -691,7 +691,8 @@ public class FrontEnd extends JFrame {
 			if (type.equals("ICNS") && settings.warnSaveNonStandard) {
 				for (DiskIconsView fs: listData.get(s).getView().fileIcons) {
 					if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
-						String[] fs_type = IcnsHeader.OSMatch(fs.layout, fs.type);
+						String fs_layout = fs.size+" "+Static.getIcon(fs.layout);
+						String[] fs_type = IcnsHeader.OSMatch(fs_layout, fs.type);
 						if (fs_type == null) {
 							JOptionPane.showMessageDialog(this, 
 									String.format(res.getString("error_standard"), fs.layout), 

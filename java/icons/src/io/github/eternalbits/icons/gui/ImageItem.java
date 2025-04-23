@@ -179,8 +179,10 @@ public class ImageItem extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new ImageSelection(fs.image), null);
-				if (!canvas.paste.isEnabled())
+				if (!canvas.paste.isEnabled()) {
+					canvas.setComponentPopupMenu();
 					setComponentPopupMenu();
+				}
 			}
 		});
 		

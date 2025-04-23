@@ -76,11 +76,13 @@ class ListItem {
 	 *  the operation will be canceled with {@code false}.
 	 *   
 	 * @param icon	A list with the icon and output.
+	 * @param index	Index of the image to be processed.
 	 * @param stop	True if coming from canCloseNow or false if coming from update or close.
 	 * @return	true if is all right to proceed, false otherwise.
 	 */
-	boolean stopRun(String icon, boolean stop) {
+	boolean stopRun(String icon, int index, boolean stop) {
 		if (image.getUndo()) {
+			app.list.setSelectedIndex(index);
 			switch (JOptionPane.showConfirmDialog(app, 
 					String.format(app.res.getString("confirm_save"), getFile().getName()), 
 					app.res.getString("save_msg"), 
@@ -106,7 +108,7 @@ class ListItem {
 	 * @param type	Extension type: ico, icns or png.
 	 * @param icon	A list with the icon and output.
 	 */
-	void copy(File to, String type, String icon ) {
+	void copy(File to, String type, String icon) {
 		boolean save = image.getPath().equals(to.getPath());
 		File copy = null;
 		try (DiskIcons clone = DiskImage.create(type, to, image, type.equals("ICO") ? icon : null)) {

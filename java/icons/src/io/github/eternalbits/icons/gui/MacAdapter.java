@@ -24,8 +24,10 @@ import java.awt.desktop.PreferencesEvent;
 import java.awt.desktop.PreferencesHandler;
 import java.awt.desktop.QuitStrategy;
 
+import javax.swing.ImageIcon;
+
 /**
- * A minimal adapter to delegate the default Mac Menu requests to
+ * A minimal adapter to delegate the default macOS Menu requests to
  *  the Front End object.
  * <p>
  */
@@ -34,10 +36,11 @@ class MacAdapter {
 	private final FrontEnd mainFrame;
 	
 	/**
-	 * Delegates the default Mac Menu requests to the {@code FrontEnd}.
+	 * Delegates the default macOS Menu requests to the {@code FrontEnd}.
 	 */
 	MacAdapter(FrontEnd frontEnd) {
 		mainFrame = frontEnd;
+		mainFrame.setIconImage(new ImageIcon(FrontEnd.getResource("macos.png")).getImage());
 		
 		Desktop macApp = Desktop.getDesktop();
 		
