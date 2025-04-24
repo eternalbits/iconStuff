@@ -24,12 +24,12 @@
     <runtimeBits>64/32</runtimeBits>
   </jre>
   <versionInfo>
-    <fileVersion>1.3.0.0</fileVersion>
-    <txtFileVersion>1.3.0.0</txtFileVersion>
+    <fileVersion>1.4.0.0</fileVersion>
+    <txtFileVersion>1.4.0.0</txtFileVersion>
     <fileDescription>Convert ICO and ICNS disk images</fileDescription>
     <copyright>Copyright © 2024-2025 Rui Baptista</copyright>
-    <productVersion>1.3.0.0</productVersion>
-    <txtProductVersion>1.3.0.0</txtProductVersion>
+    <productVersion>1.4.0.0</productVersion>
+    <txtProductVersion>1.4.0.0</txtProductVersion>
     <productName>Icons</productName>
     <companyName></companyName>
     <internalName>Rui Baptista</internalName>

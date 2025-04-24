@@ -3,8 +3,8 @@
 ### How to Install "Icons"
 
 You can find a brief description on the [`share`](https://github.com/eternalbits/iconStuff/tree/main/share/) 
-page. Currently only command line input is available, but I rely on this to project 
-a screen similar to that of CompactVD.
+page. Currently there are two options present: an input command when commands 
+are used or a window when it is used without commands.
 
 ### What is "Icons"?
 
@@ -17,24 +17,27 @@ that is present in ICO and [`Apple's compression`](https://github.com/eternalbit
 that is present in ICNS.
 
 The app finally has [a window](https://github.com/eternalbits/iconStuff/releases)!
+Check it out 😎
 
 The --icon parameter means a format of choice for your icons.
 
 Both files can be viewed with the [XnView MP](https://www.xnview.com/en/xnviewmp/) tool.
 
 #### Microsoft's ICO
-`--icon 0=png;1=png;2=*;3=*;4=png;5=*;6=*;7=bit`
+`--icon 2=bit;3=*;4=64:bit;?=48:bit;?=24:bit`
 
 The phrase for the ICO consists of
-- Number that appears in front of fileIcons
+- Number that appears in front of fileIcons or `?` for new icon
+- New number for size; generally this number should be lower than the original
 - Description of the respective icon: BIT, PNG or * (which means that
 this icon should be deleted)
 
 #### Apple's ICNS
-`--icon 1=ic13:png;2=ic11:png;3=ic04:bit;4=png`
+`--icon 1=ic05:png;2=ic04:bit;3=*;?=128:png`
 
 The sentence for the ICNS consists of
-- Number that appears in front of fileIcons
+- Number that appears in front of fileIcons or `?` for new icon
+- New number for size; generally this number should be lower than the original
 - Description of the respective icon: BIT, PNG or *
 - Description of [`Icon types`](https://en.wikipedia.org/wiki/Apple_Icon_Image_format#Icon_types).
 In reality this is a description of length 3 or 4, and nothing is
@@ -45,7 +48,8 @@ correct.
 `--icon 1=*;3=*;4=png;6=*`
 
 The sentence for PNG consists of
-- Number that appears in front of fileIcons
+- Number that appears in front of fileIcons or `?` for new icon
+- New number for size; generally this number should be lower than the original
 - Description of the respective icon: PNG or * (it is always the
 largest icon that is selected)
 
