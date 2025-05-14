@@ -71,10 +71,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import io.github.eternalbits.disk.DiskIcons;
-import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.disk.DiskImage;
 import io.github.eternalbits.disk.WrongHeaderException;
-import io.github.eternalbits.icns.IcnsHeader;
 import io.github.eternalbits.icons.Static;
 
 /**
@@ -687,20 +685,6 @@ public class FrontEnd extends JFrame {
 						String.format(res.getString("error_image_type"), type), 
 						res.getString("save_as_msg"), JOptionPane.ERROR_MESSAGE);
 				return;
-			}
-			if (type.equals("ICNS") && settings.warnSaveNonStandard) {
-				for (DiskIconsView fs: listData.get(s).getView().fileIcons) {
-					if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
-						String fs_layout = fs.size+" "+Static.getIcon(fs.layout);
-						String[] fs_type = IcnsHeader.OSMatch(fs_layout, fs.type);
-						if (fs_type == null) {
-							JOptionPane.showMessageDialog(this, 
-									String.format(res.getString("error_standard"), fs.layout), 
-									res.getString("save_as_msg"), JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-					}
-				}
 			}
 			listData.get(s).copy(file, type, view.getIcon());
 		}

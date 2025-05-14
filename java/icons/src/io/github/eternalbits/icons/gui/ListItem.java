@@ -28,6 +28,7 @@ import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.disk.DiskImage;
 import io.github.eternalbits.disk.DiskImageView;
 import io.github.eternalbits.disk.WrongHeaderException;
+import io.github.eternalbits.icns.IcnsHeader;
 import io.github.eternalbits.icons.Icons;
 import io.github.eternalbits.icons.Static;
 
@@ -109,8 +110,22 @@ class ListItem {
 	 * @param icon	A list with the icon and output.
 	 */
 	void copy(File to, String type, String icon) {
-		boolean save = image.getPath().equals(to.getPath());
+		if (type.toLowerCase().equals("icns") && app.settings.warnSaveNonStandard) {
+			for (DiskIconsView fs: getView().fileIcons) {
+				if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+					String fs_layout = fs.size+" "+Static.getIcon(fs.layout);
+					String[] fs_type = IcnsHeader.OSMatch(fs_layout, fs.type);
+					if (fs_type == null) {
+						JOptionPane.showMessageDialog(app, 
+								String.format(app.res.getString("error_standard"), fs.layout), 
+								app.res.getString("save_as_msg"), JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+			}
+		}
 		File copy = null;
+		boolean save = image.getPath().equals(to.getPath());
 		try (DiskIcons clone = DiskImage.create(type, to, image, type.equals("ICO") ? icon : null)) {
 			copy = to; // copy open by DiskImage
 			if (save) 
