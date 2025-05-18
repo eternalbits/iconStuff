@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
@@ -170,7 +171,7 @@ public class FrontEnd extends JFrame {
 	 */
 	private void onLocaleChange() {
 		res = ResourceBundle.getBundle("res.bundle", 
-				SettingsDialog.Languages(settings.selectedLanguage, settings.selectedCountry));
+				new Locale.Builder().setLanguage("en").setRegion("US").build());
 		UIManager.put("OptionPane.cancelButtonText", res.getString("cancel_text"));
 		UIManager.put("OptionPane.yesButtonText", res.getString("yes_text"));
 		UIManager.put("OptionPane.noButtonText", res.getString("no_text"));
