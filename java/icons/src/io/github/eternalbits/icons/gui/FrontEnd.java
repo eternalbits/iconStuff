@@ -113,8 +113,8 @@ public class FrontEnd extends JFrame {
 	private final FileDialog dialog = new FileDialog(this);
 	
 	private transient int savedListIndex = -1;
-	private transient final boolean isWindows;
-	private transient final boolean isMac;
+	transient final boolean isWindows;
+	transient final boolean isMac;
 	
 	final Settings settings;
 	JFileChooser chooser;
@@ -172,6 +172,7 @@ public class FrontEnd extends JFrame {
 	private void onLocaleChange() {
 		res = ResourceBundle.getBundle("res.bundle", 
 				new Locale.Builder().setLanguage("en").setRegion("US").build());
+		UIManager.put("OptionPane.cancelButtonText", res.getString("cancel_text"));
 		UIManager.put("OptionPane.yesButtonText", res.getString("yes_text"));
 		UIManager.put("OptionPane.noButtonText", res.getString("no_text"));
 		UIManager.put("OptionPane.okButtonText", res.getString("ok_text"));

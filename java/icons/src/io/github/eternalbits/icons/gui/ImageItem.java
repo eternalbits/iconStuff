@@ -22,6 +22,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
@@ -34,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingUtilities;
 
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
@@ -99,6 +103,14 @@ public class ImageItem extends JPanel {
 			}
         });
 		
+		MouseListener mouseListener = new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					setComponentPopupMenu();
+				}
+			}
+		};
+		addMouseListener(mouseListener);
 	}
 	
 	int allCombo() {
@@ -179,9 +191,15 @@ public class ImageItem extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new ImageSelection(fs.image), null);
-				if (!canvas.paste.isEnabled()) {
-					canvas.setComponentPopupMenu();
-					setComponentPopupMenu();
+				/**
+				 * The call to MouseListener does not work on Linux and macOS systems,
+				 *  so keep the old call. This version does not work on some results 
+				 *  when mixed with other external inputs.
+				 */
+				if (!app.isWindows) {
+					if (!canvas.paste.isEnabled()) {
+						canvas.setComponentPopupMenu();
+					}
 				}
 			}
 		});

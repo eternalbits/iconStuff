@@ -24,6 +24,9 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
@@ -47,7 +51,8 @@ class ImageCanvas extends JPanel {
 	
 	private final JPanel panel = new JPanel();
 	private final JScrollPane scroll = new JScrollPane(panel);
-
+	private List<DiskIconsView> local = new ArrayList<DiskIconsView>();
+	
 	JMenuItem paste = new JMenuItem();
 	private ImageItem[] ic_item;
 	private String icon = null;
@@ -79,7 +84,7 @@ class ImageCanvas extends JPanel {
 		icon = null;
 		
 		String type = Static.getExtension(image.getFile()).toLowerCase();
-		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
+		local = new ArrayList<DiskIconsView>();
 
 		for (int i = 0; i < image.getView().fileIcons.size(); i++) {
 			DiskIconsView fs = image.getView().fileIcons.get(i);
@@ -137,6 +142,19 @@ class ImageCanvas extends JPanel {
 		pasteComponentPopupMenu(popup);
 		adjustComponentPopupMenu(popup);
 		panel.setComponentPopupMenu(popup);
+		if (!app.isWindows) {
+			for (int i = 0; i < local.size(); i++) {
+				ic_item[i].setComponentPopupMenu();
+			}
+		}
+		MouseListener mouseListener = new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					setComponentPopupMenu();
+				}
+			}
+		};
+		panel.addMouseListener(mouseListener);
 	}
 	
 	/**
@@ -202,7 +220,7 @@ class ImageCanvas extends JPanel {
 				app.close(app.list.getSelectedIndex());
 			}
 		});
-
+		
 	}
 	
 }
