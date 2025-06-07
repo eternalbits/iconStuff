@@ -24,7 +24,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
@@ -44,7 +43,7 @@ import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.icns.IcnsHeader;
 import io.github.eternalbits.icons.Static;
 
-public class ImageItem extends JPanel {
+class ImageItem extends JPanel {
 	private static final long serialVersionUID = 8178977464035716981L;
 
 	private final String[] sz_type = {"ICO", "PNG"};
@@ -103,14 +102,13 @@ public class ImageItem extends JPanel {
 			}
         });
 		
-		MouseListener mouseListener = new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					setComponentPopupMenu();
 				}
 			}
-		};
-		addMouseListener(mouseListener);
+		});
 	}
 	
 	int allCombo() {
@@ -179,14 +177,14 @@ public class ImageItem extends JPanel {
 		final JMenuItem copy = new JMenuItem(app.res.getString("copy"));
 		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 		final JMenuItem delete = new JMenuItem(app.res.getString("delete"));
-		delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+		delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		
 		popup.add(copy);
 		canvas.pasteComponentPopupMenu(popup);
 		popup.add(delete);
 		canvas.adjustComponentPopupMenu(popup);
 		setComponentPopupMenu(popup);
-
+		
 		copy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -214,5 +212,5 @@ public class ImageItem extends JPanel {
 		});
 		
 	}
-	
+
 }

@@ -26,7 +26,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,19 +56,20 @@ class ImageCanvas extends JPanel {
 	private ImageItem[] ic_item;
 	private String icon = null;
 	
+	private final FrontEnd app;
+	private ListItem image;
+	
 	/* On Windows, allCombo is 72, but on other operating systems it varies.
 	 *  For example, on macOS it is 93 and on Linux it is a scattered amount
 	 *  of values. Except for the first time, all other designs were made
 	 *  with the correct allCombo.
 	 */
-	private int allCombo = 72;
-	
-	private final FrontEnd app;
-	private ListItem image;
+	private int allCombo;
 	
 	ImageCanvas(FrontEnd frontEnd) {
 		app = frontEnd;
 		setLayout(new BorderLayout());
+		allCombo = app.isMac? 93: 72;
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		add(scroll, BorderLayout.CENTER);
@@ -147,14 +147,13 @@ class ImageCanvas extends JPanel {
 				ic_item[i].setComponentPopupMenu();
 			}
 		}
-		MouseListener mouseListener = new MouseAdapter() {
+		panel.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					setComponentPopupMenu();
 				}
 			}
-		};
-		panel.addMouseListener(mouseListener);
+		});
 	}
 	
 	/**
@@ -165,7 +164,7 @@ class ImageCanvas extends JPanel {
 	void pasteComponentPopupMenu(JPopupMenu popup) {
 		paste = new JMenuItem(app.res.getString("paste"));
 		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-
+		
 		Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
 		paste.setEnabled(t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor));
 		popup.add(paste);
@@ -174,7 +173,7 @@ class ImageCanvas extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
-				if (t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor))
+				if (t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
 					try {
 						DiskIconsView fs = new DiskIconsView();
 						fs.image = (BufferedImage) t.getTransferData(DataFlavor.imageFlavor);
@@ -190,6 +189,7 @@ class ImageCanvas extends JPanel {
 					} catch (UnsupportedFlavorException | IOException p) {
 						p.printStackTrace();
 					}
+				}
 			}
 		});
 	}
@@ -206,7 +206,7 @@ class ImageCanvas extends JPanel {
 		popup.add(new JSeparator());
 		popup.add(refresh);
 		popup.add(close);
-
+		
 		refresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
