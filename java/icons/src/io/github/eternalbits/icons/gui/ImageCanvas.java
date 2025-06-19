@@ -47,6 +47,7 @@ import io.github.eternalbits.icons.Static;
 
 class ImageCanvas extends JPanel {
 	private static final long serialVersionUID = 4983591518692183668L;
+	static final int CTRL_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 	
 	private final JPanel panel = new JPanel();
 	private final JScrollPane scroll = new JScrollPane(panel);
@@ -148,6 +149,7 @@ class ImageCanvas extends JPanel {
 			}
 		}
 		panel.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					setComponentPopupMenu();
@@ -163,7 +165,7 @@ class ImageCanvas extends JPanel {
 	 */
 	void pasteComponentPopupMenu(JPopupMenu popup) {
 		paste = new JMenuItem(app.res.getString("paste"));
-		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ImageCanvas.CTRL_MASK));
 		
 		Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
 		paste.setEnabled(t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor));

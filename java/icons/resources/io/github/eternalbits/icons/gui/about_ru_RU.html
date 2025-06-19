@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>О Convert ICO и ICNS Disk Icons</title>
+<style>/* only a limited subset of CSS1: http://docs.oracle.com/javase/8/docs/api/javax/swing/text/html/CSS.html */
+body {
+ font-family: Verdana, Arial, sans-serif;
+ font-size: 11pt;
+ margin: 0 6px;
+}
+h4, div.p { /* margins don't collapse */
+ margin-bottom: 12px;
+ margin-top: 0;
+}
+div.m {
+ margin-bottom: 0;
+ margin-left: 28px;
+ margin-top: 4px;
+}
+ul {
+ margin-bottom: 0;
+}
+li {
+ margin-bottom: 4px;
+}
+a { /* isolated names have body */
+ text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+
+<a name="top"><h3>О Convert ICO и ICNS Disk Icons</h3></a>
+
+<table style="margin-bottom:8px"><tr>
+<td><img src="icons.png" width="64" height="64" style="margin-right:12px" alt=""/></td>
+<td style="vertical-align:top">Для простого устранения различий между значками<br>
+<small>Версия 1.4<br><br>
+Выпущено под лицензией Apache License 2.0
+</small></td>
+</tr></table>
+
+<div class="p">Дополнительную информацию см. в следующих разделах:<ul>
+<li><a href="#whatis">Обзор программы</a></li>
+<li><a href="#dialog">Диалоговое окно настроек</a></li>
+<li><a href="#note">Уведомления об авторских правах</a></li>
+</ul></div>
+
+
+<hr/><a name="whatis"></a>
+<h4>Обзор программы
+<a href="#top">▲</a></h4>
+
+
+<div class="p">Icons — это в первую очередь версия, которая позволяет вам переводить из <a href="https://en.wikipedia.org/wiki/ICO_(file_format)">Microsoft Windows ICO</a> в <a href="https://en.wikipedia.org/wiki/Apple_Icon_Image_format">Apple macOS ICNS</a> и наоборот.
+</div>
+<div class="p" style="margin-bottom:0">В настоящее время приложение состоит из переключения между изображениями PNG, поскольку обе функции имеют этот инструмент, битовую карту Microsoft, которая присутствует в ICO, и сжатие Apple, которое присутствует в ICNS.
+</div>
+<table><tr>
+<td><img src="Chess.png" width="256" height="256" style="margin-right:12px" alt=""/></td><td>
+<p style="margin:3px"><select><option>ICO</option><option>ic08</option><option selected>ic13</option><option>PNG</option></select></p>
+<p style="margin:3px"><select><option>256</option><option>128</option><option>32</option><option>16</option></select></p>
+<p style="margin:3px"><select><option>PNG</option><option>32-bit</option></select></p>
+</td></tr></table>
+<div class="p">Щелчок правой кнопкой мыши по изображению отобразит следующее поле:
+<div class="m"><code>Копировать</code> — означает, что выбранное изображение будет скопировано
+</div>
+<div class="m"><code>Вставить</code> — означает, что скопированное изображение будет добавлено
+</div>
+<div class="m"><code>Удалить</code> — означает, что выбранное изображение исчезнет
+</div>
+<div class="m"><code>Обновить</code> — весь файл будет прочитан снова
+</div>
+<div class="m"><code>Закрыть</code> — весь файл исчезнет
+</div></div>
+
+
+<hr/><a name="dialog"></a>
+<h4>Диалоговое окно настроек
+<a href="#top">▲</a></h4>
+
+
+<div class="p"><input type="checkbox">Использует один из двух методов в открытом диалоговом окне
+<div class="m">Используемый диалог открытия имеет два метода, которые соответствуют стандартному методу открытия и методу Java. В Windows стандартный метод не может быть использован при наличии экранов с разным разрешением.
+</div></div>
+<div class="p"><input type="checkbox">Предупреждать, если вы хотите выполнить операцию сохранения
+<div class="m">Уведомляет вас, когда вы хотите выполнить операцию сохранения.
+</div></div>
+<div class="p"><input type="checkbox">Расположить значки в порядке убывания
+<div class="m">Используйте экран для упорядочивания значков в порядке от самого высокого к самому низкому разрешению.
+</div></div>
+<div class="p"><input type="checkbox">Предупреждать, если вы хотите сохранить нестандартные значки
+<div class="m">Формат ICNS не позволяет сохранять некоторые разрешения. Если ему не удается зарегистрировать разрешение, он либо игнорирует его, либо выдает предупреждение пользователю.
+</div></div>
+<div class="p"><input type="checkbox">Игнорировать значки размером более 256 пикселей
+<div class="m">В формате ICO он отказывается сохранять значки размером более 256 пикселей.
+</div></div>
+<div class="p"><input type="checkbox">Игнорировать дубликаты значков
+<div class="m">В формате ICO он отказывается регистрировать дублирующиеся разрешения.
+</div></div>
+
+
+<hr/><a name="note"></a>
+<h4>Уведомления об авторских правах
+<a href="#top">▲</a></h4>
+
+
+<div class="p" style="margin-bottom:4px">Авторские права © 2024-2025 Rui Baptista</div>
+<div class="p">Лицензия Apache License, версия 2.0. Вы можете получить копию Лицензии, <a href="https://www.apache.org/licenses/LICENSE-2.0">выпущенную в соответствии с Apache License 2.0</a>. Программное обеспечение, распространяемое в соответствии с Лицензией, распространяется на условиях «КАК ЕСТЬ», БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ ИЛИ УСЛОВИЙ, явных или подразумеваемых.
+</div>
+
+<div class="p">Этот продукт включает программное обеспечение <a href="https://commons.apache.org/proper/commons-cli/">Apache Commons CLI</a> Авторские права 2002-2024 Apache Software Foundation.
+</div>
+
+
+</body>
+</html>

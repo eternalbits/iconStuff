@@ -103,6 +103,7 @@ class ImageItem extends JPanel {
         });
 		
 		addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					setComponentPopupMenu();
@@ -134,7 +135,7 @@ class ImageItem extends JPanel {
 	private void doRepaint(JLabel image, JComboBox<String> type, JComboBox<String> size, JComboBox<String> icon, Dimension dim, int allCombo) {
 		int rightImage = (256 - dim.width) / 5;
 		int leftImage = (256 - dim.width) - rightImage;
-		int outImage = allCombo > dim.height? (allCombo - dim.height) / 2: 0;;
+		int outImage = allCombo > dim.height? (allCombo - dim.height) / 2: 0;
 		int outCombo = dim.height > allCombo? (dim.width - allCombo) / 2: 0;
 		
 		GroupLayout layout = new GroupLayout(this);
@@ -175,7 +176,7 @@ class ImageItem extends JPanel {
 	void setComponentPopupMenu() {
 		final JPopupMenu popup = new JPopupMenu();
 		final JMenuItem copy = new JMenuItem(app.res.getString("copy"));
-		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ImageCanvas.CTRL_MASK));
 		final JMenuItem delete = new JMenuItem(app.res.getString("delete"));
 		delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		

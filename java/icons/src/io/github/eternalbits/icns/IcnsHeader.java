@@ -316,7 +316,7 @@ class IcnsHeader {
 	IcnsHeader(IcnsFiles icns, ByteBuffer in) throws IOException, IOException, WrongHeaderException {
 		img = new PngHeader();
 		app = new AppHeader();
-				
+		
 		if (in.remaining() >= HEADER_SIZE) {
 			in.order(IcnsFiles.BYTE_ORDER);
 			

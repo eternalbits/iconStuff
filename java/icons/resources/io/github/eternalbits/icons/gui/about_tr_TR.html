@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ICO ve ICNS Disk Simgelerini Dönüştürme Hakkında</title>
+<style>/* only a limited subset of CSS1: http://docs.oracle.com/javase/8/docs/api/javax/swing/text/html/CSS.html */
+body {
+ font-family: Verdana, Arial, sans-serif;
+ font-size: 11pt;
+ margin: 0 6px;
+}
+h4, div.p { /* margins don't collapse */
+ margin-bottom: 12px;
+ margin-top: 0;
+}
+div.m {
+ margin-bottom: 0;
+ margin-left: 28px;
+ margin-top: 4px;
+}
+ul {
+ margin-bottom: 0;
+}
+li {
+ margin-bottom: 4px;
+}
+a { /* isolated names have body */
+ text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+
+<a name="top"><h3>ICO ve ICNS Disk Simgelerini Dönüştürme Hakkında</h3></a>
+
+<table style="margin-bottom:8px"><tr>
+<td><img src="icons.png" width="64" height="64" style="margin-right:12px" alt=""/></td>
+<td style="vertical-align:top">Simgeler arasındaki farklılıkları kolayca çözmek için<br>
+<small>Sürüm 1.4<br><br>
+Apache Lisansı 2.0 altında yayımlandı
+</small></td>
+</tr></table>
+
+<div class="p">Daha fazla bilgi için aşağıdaki konulara bakın:<ul>
+<li><a href="#whatis">Program Genel Bakışı</a></li>
+<li><a href="#dialog">Ayarlar İletişim Kutusu</a></li>
+<li><a href="#note">Telif Hakkı Bildirimleri</a></li>
+</ul></div>
+
+
+<hr/><a name="whatis"></a>
+<h4>Program Genel Bakışı
+<a href="#top">▲</a></h4>
+
+
+<div class="p">Simgeler, öncelikle <a href="https://en.wikipedia.org/wiki/ICO_(file_format)">Microsoft Windows ICO</a>'dan <a href="https://en.wikipedia.org/wiki/Apple_Icon_Image_format">Apple macOS ICNS</a>'ye ve tam tersine çeviri yapmanıza olanak tanıyan bir sürümdür.
+</div>
+<div class="p" style="margin-bottom:0">Şu anda, uygulama PNG görüntüleri arasında geçiş yapmaktan oluşuyor, çünkü her iki işlev de bu araca sahip, ICO'da bulunan Microsoft'un bit eşlemi ve ICNS'de bulunan Apple'ın sıkıştırması.
+</div>
+<table><tr>
+<td><img src="Chess.png" width="256" height="256" style="margin-right:12px" alt=""/></td><td>
+<p style="margin:3px"><select><option>ICO</option><option>ic08</option><option selected>ic13</option><option>PNG</option></select></p>
+<p style="margin:3px"><select><option>256</option><option>128</option><option>32</option><option>16</option></select></p>
+<p style="margin:3px"><select><option>PNG</option><option>32-bit</option></select></p>
+</td></tr></table>
+<div class="p">Resme sağ tıklandığında aşağıdaki kutu görüntülenir:
+<div class="m"><code>Kopyala</code> - Seçili resmin kopyalanacağı anlamına gelir
+</div>
+<div class="m"><code>Yapıştır</code> - Kopyalanan resmin ekleneceği anlamına gelir
+</div>
+<div class="m"><code>Sil</code> - Seçili resmin kaybolacağı anlamına gelir
+</div>
+<div class="m"><code>Yenile</code> - Tüm dosya tekrar okunacaktır
+</div>
+<div class="m"><code>Kapat</code> - Tüm dosya kaybolacaktır
+</div></div>
+
+
+<hr/><a name="dialog"></a>
+<h4>Ayarlar İletişim Kutusu
+<a href="#top">▲</a></h4>
+
+
+<div class="p"><input type="checkbox">Açık iletişim kutusundaki iki yöntemden birini kullanır
+<div class="m">Kullanılan açık iletişim kutusunun standart açık yöntemine ve bir Java yöntemine karşılık gelen iki yöntemi vardır. Windows'ta, farklı çözünürlüklerde ekranlar olduğunda standart yöntem kullanılamaz.
+</div></div>
+<div class="p"><input type="checkbox">Kaydet işlemini gerçekleştirmek istiyorsanız uyarın
+<div class="m">Kaydetme işlemini gerçekleştirmek istediğinizde sizi bilgilendirir.
+</div></div>
+<div class="p"><input type="checkbox">Simgeleri azalan sıraya koyun
+<div class="m">Simgeleri en yüksek çözünürlükten en düşüğe doğru düzenlemek için ekranı kullanın.
+</div></div>
+<div class="p"><input type="checkbox">Standart olmayan simgeleri kaydetmek istiyorsanız uyarın
+<div class="m">ICNS biçimi bazı çözünürlüklerin kaydedilmesine izin vermez. Bir çözünürlüğü kaydetmeyi başaramadığında, ya onu yok sayar ya da kullanıcıya bir uyarı verir.
+</div></div>
+<div class="p"><input type="checkbox">256 pikselden büyük simgeleri yoksay
+<div class="m">ICO biçiminde, 256 pikselden büyük simgeleri kaydetmeyi reddeder.
+</div></div>
+<div class="p"><input type="checkbox">Yinelenen simgeleri yoksay
+<div class="m">ICO biçiminde, yinelenen çözünürlükleri kaydetmeyi reddeder.
+</div></div>
+
+
+<hr/><a name="note"></a>
+<h4>Telif Hakkı Bildirimleri
+<a href="#top">▲</a></h4>
+
+
+<div class="p" style="margin-bottom:4px">Telif Hakkı © 2024-2025 Rui Baptista</div>
+<div class="p">Apache Lisansı, Sürüm 2.0 kapsamında lisanslanmıştır. <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Lisansı 2.0</a> kapsamında yayınlanan Lisansın bir kopyasını edinebilirsiniz. Lisans kapsamında dağıtılan yazılım, açık veya zımni HERHANGİ BİR GARANTİ VEYA KOŞUL OLMADAN "OLDUĞU GİBİ" TEMELİNDE dağıtılır.
+</div>
+
+<div class="p">Bu ürün, <a href="https://commons.apache.org/proper/commons-cli/">Apache Commons CLI</a> yazılımını içerir Telif Hakkı 2002-2024 The Apache Software Foundation.
+</div>
+
+
+</body>
+</html>

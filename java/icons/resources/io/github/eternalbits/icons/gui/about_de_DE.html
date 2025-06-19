@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Informationen zum Konvertieren von ICO- und ICNS-Disk-Icons</title>
+<style>/* only a limited subset of CSS1: http://docs.oracle.com/javase/8/docs/api/javax/swing/text/html/CSS.html */
+body {
+ font-family: Verdana, Arial, sans-serif;
+ font-size: 11pt;
+ margin: 0 6px;
+}
+h4, div.p { /* margins don't collapse */
+ margin-bottom: 12px;
+ margin-top: 0;
+}
+div.m {
+ margin-bottom: 0;
+ margin-left: 28px;
+ margin-top: 4px;
+}
+ul {
+ margin-bottom: 0;
+}
+li {
+ margin-bottom: 4px;
+}
+a { /* isolated names have body */
+ text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+
+<a name="top"><h3>Informationen zum Konvertieren von ICO- und ICNS-Disk-Icons</h3></a>
+
+<table style="margin-bottom:8px"><tr>
+<td><img src="icons.png" width="64" height="64" style="margin-right:12px" alt=""/></td>
+<td style="vertical-align:top">Um Unterschiede zwischen Icons einfach zu beheben<br>
+<small>Version 1.4<br><br>
+Veröffentlicht unter der Apache-Lizenz 2.0
+</small></td>
+</tr></table>
+
+<div class="p">Weitere Informationen finden Sie in den folgenden Abschnitten:<ul>
+<li><a href="#whatis">Programmübersicht</a></li>
+<li><a href="#dialog">Dialogfeld „Einstellungen“</a></li>
+<li><a href="#note">Urheberrechtshinweise</a></li>
+</ul></div>
+
+
+<hr/><a name="whatis"></a>
+<h4>Programmübersicht
+<a href="#top">▲</a></h4>
+
+
+<div class="p">„Icons“ ist in erster Linie eine Version, die die Konvertierung von <a href="https://en.wikipedia.org/wiki/ICO_(file_format)">Microsoft Windows ICO</a> in <a href="https://en.wikipedia.org/wiki/Apple_Icon_Image_format">Apple macOS ICNS</a> und umgekehrt ermöglicht.
+</div>
+<div class="p" style="margin-bottom:0">Derzeit besteht die Anwendung aus dem Wechsel zwischen PNG-Bildern, da beide Funktionen über dieses Tool verfügen: Microsofts Bitmap, das in ICO vorhanden ist, und Apples Komprimierung, die in ICNS vorhanden ist.
+</div>
+<table><tr>
+<td><img src="Chess.png" width="256" height="256" style="margin-right:12px" alt=""/></td><td>
+<p style="margin:3px"><select><option>ICO</option><option>ic08</option><option selected>ic13</option><option>PNG</option></select></p>
+<p style="margin:3px"><select><option>256</option><option>128</option><option>32</option><option>16</option></select></p>
+<p style="margin:3px"><select><option>PNG</option><option>32-bit</option></select></p>
+</td></tr></table>
+<div class="p">Ein Rechtsklick auf das Bild öffnet folgendes Fenster:
+<div class="m"><code>Kopieren</code> – Das ausgewählte Bild wird kopiert.
+</div>
+<div class="m"><code>Einfügen</code> – Das kopierte Bild wird hinzugefügt.
+</div>
+<div class="m"><code>Löschen</code> – Das ausgewählte Bild verschwindet.
+</div>
+<div class="m"><code>Aktualisieren</code> – Die gesamte Datei wird erneut gelesen.
+</div>
+<div class="m"><code>Schließen</code> – Die gesamte Datei verschwindet.
+</div></div>
+
+
+<hr/><a name="dialog"></a>
+<h4>Dialogfeld „Einstellungen“
+<a href="#top">▲</a></h4>
+
+
+<div class="p"><input type="checkbox">Verwendet eine von zwei Methoden im Öffnen-Dialogfeld
+<div class="m">Der Dialog zum Öffnen verfügt über zwei Methoden: die Standardmethode zum Öffnen und eine Java-Methode. Unter Windows kann die Standardmethode bei Bildschirmen mit unterschiedlichen Auflösungen nicht verwendet werden.
+</div></div>
+<div class="p"><input type="checkbox">Warnung beim Speichern
+<div class="m">Benachrichtigt Sie, wenn Sie speichern möchten.
+</div></div>
+<div class="p"><input type="checkbox">Symbole absteigend sortieren
+<div class="m">Ordnen Sie die Symbole auf dem Bildschirm von der höchsten zur niedrigsten Auflösung an.
+</div></div>
+<div class="p"><input type="checkbox">Warnung beim Speichern nicht standardmäßiger Symbole
+<div class="m">Das ICNS-Format unterstützt das Speichern bestimmter Auflösungen nicht. Wenn eine Auflösung nicht registriert werden kann, wird sie entweder ignoriert oder eine Warnung ausgegeben.
+</div></div>
+<div class="p"><input type="checkbox">Symbole größer als 256 Pixel ignorieren
+<div class="m">Im ICO-Format werden Symbole mit einer Größe von mehr als 256 Pixeln nicht gespeichert.
+</div></div>
+<div class="p"><input type="checkbox">Doppelte Symbole ignorieren
+<div class="m">Im ICO-Format werden doppelte Auflösungen nicht registriert.
+</div></div>
+
+
+<hr/><a name="note"></a>
+<h4>Urheberrechtshinweise
+<a href="#top">▲</a></h4>
+
+
+<div class="p" style="margin-bottom:4px">Copyright © 2024–2025 Rui Baptista</div>
+<div class="p">Lizenziert unter der Apache-Lizenz, Version 2.0. Sie können eine Kopie der Lizenz <a href="https://www.apache.org/licenses/LICENSE-2.0">veröffentlicht unter der Apache-Lizenz 2.0</a> erhalten. Die unter dieser Lizenz vertriebene Software wird „WIE BESEHEN“ und OHNE JEGLICHE GARANTIEN ODER ZUSICHERUNGEN, weder ausdrücklich noch stillschweigend, bereitgestellt.
+</div>
+
+<div class="p">Dieses Produkt enthält die Software <a href="https://commons.apache.org/proper/commons-cli/">Apache Commons CLI</a>, Copyright 2002–2024 The Apache Software Foundation.
+</div>
+
+
+</body>
+</html>
