@@ -46,8 +46,8 @@ import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.icons.Static;
 
 class ImageCanvas extends JPanel {
+	protected static final int CTRL_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 	private static final long serialVersionUID = 4983591518692183668L;
-	static final int CTRL_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 	
 	private final JPanel panel = new JPanel();
 	private final JScrollPane scroll = new JScrollPane(panel);

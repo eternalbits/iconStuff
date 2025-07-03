@@ -327,7 +327,7 @@ class IcnsHeader {
 				
 				int offset = HEADER_SIZE;
 				ByteBuffer tr = null;
-								
+				
 				while (offset < icns.getLength()) {
 					tr = icns.readIcon(offset, 16).order(IcnsFiles.BYTE_ORDER);
 					if (tr.remaining() < 8)

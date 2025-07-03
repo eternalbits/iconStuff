@@ -81,24 +81,33 @@ class ImageItem extends JPanel {
 		cb_type.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fs.type = String.valueOf(cb_type.getSelectedItem());
-				image.setUndo(true);
+				String fs_type = String.valueOf(cb_type.getSelectedItem());
+				if (!fs.type.equals(fs_type)) {
+					fs.type = fs_type;
+					image.setUndo(true);
+				}
 			}
         });
 		cb_size.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fs.size = Integer.parseInt(cb_size.getSelectedItem().toString());
-				canvas.doRepaint(image);
-				image.setUndo(true);
+				String fs_size = String.valueOf(cb_size.getSelectedItem());
+				if (!Integer.toString(fs.size).equals(fs_size)) {
+					fs.size = Integer.parseInt(fs_size);
+					canvas.doRepaint(image);
+					image.setUndo(true);
+				}
 			}
         });
 		cb_icon.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fs.layout = Static.getSize(fs.layout)+" "+cb_icon.getSelectedItem();
-				canvas.doRepaint(image);
-				image.setUndo(true);
+				String fs_layout = Static.getSize(fs.layout)+" "+cb_icon.getSelectedItem();
+				if (!fs.layout.equals(fs_layout)) {
+					fs.layout = fs_layout;
+					canvas.doRepaint(image);
+					image.setUndo(true);
+				}
 			}
         });
 		
