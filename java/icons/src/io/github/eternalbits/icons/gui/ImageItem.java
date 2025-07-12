@@ -76,7 +76,7 @@ class ImageItem extends JPanel {
 		cb_icon = new JComboBox<String>(sz_icon);
 		cb_icon.setSelectedItem(fs_icon);
 		
-		doRepaint(st_image, cb_type, cb_size, cb_icon, dim, allCombo);
+		doRepaint(dim, allCombo);
 		
 		cb_type.addActionListener(new ActionListener() {
 			@Override
@@ -141,7 +141,7 @@ class ImageItem extends JPanel {
 		return type.toArray(new String[0]);
 	}
 	
-	private void doRepaint(JLabel image, JComboBox<String> type, JComboBox<String> size, JComboBox<String> icon, Dimension dim, int allCombo) {
+	private void doRepaint(Dimension dim, int allCombo) {
 		int rightImage = (256 - dim.width) / 5;
 		int leftImage = (256 - dim.width) - rightImage;
 		int outImage = allCombo > dim.height? (allCombo - dim.height) / 2: 0;
@@ -152,12 +152,12 @@ class ImageItem extends JPanel {
 			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
 					.addGap(12 + leftImage)
-					.addComponent(image, GroupLayout.PREFERRED_SIZE, dim.width, GroupLayout.PREFERRED_SIZE)
+					.addComponent(st_image, GroupLayout.PREFERRED_SIZE, dim.width, GroupLayout.PREFERRED_SIZE)
 					.addGap(12 + rightImage)
 					.addGroup(layout.createParallelGroup(Alignment.LEADING)
-						.addComponent(type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(size, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(icon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(cb_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cb_size, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cb_icon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 		);
 		layout.setVerticalGroup(
 			layout.createParallelGroup(Alignment.LEADING)
@@ -165,15 +165,15 @@ class ImageItem extends JPanel {
 					.addGroup(layout.createParallelGroup(Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
 							.addGap(12 + outImage)
-							.addComponent(image, GroupLayout.PREFERRED_SIZE, dim.height, GroupLayout.PREFERRED_SIZE)
+							.addComponent(st_image, GroupLayout.PREFERRED_SIZE, dim.height, GroupLayout.PREFERRED_SIZE)
 							.addGap(12 + outImage))
 						.addGroup(layout.createSequentialGroup()
 							.addGap(12 + outCombo)
-							.addComponent(type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(cb_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(size, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(cb_size, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(icon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(cb_icon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(12 + outCombo))))
 		);
 		setLayout(layout);
