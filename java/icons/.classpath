@@ -7,6 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="lib" path="lib/commons-cli-1.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.9.0.jar" sourcepath="lib/commons-cli-1.9.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
