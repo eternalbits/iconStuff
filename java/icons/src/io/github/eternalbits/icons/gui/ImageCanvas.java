@@ -23,7 +23,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -38,7 +37,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import io.github.eternalbits.disk.DiskIcons;
@@ -46,7 +44,6 @@ import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.icons.Static;
 
 class ImageCanvas extends JPanel {
-	protected static final int CTRL_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 	private static final long serialVersionUID = 4983591518692183668L;
 	
 	private final JPanel panel = new JPanel();
@@ -165,7 +162,6 @@ class ImageCanvas extends JPanel {
 	 */
 	void pasteComponentPopupMenu(JPopupMenu popup) {
 		paste = new JMenuItem(app.res.getString("paste"));
-		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ImageCanvas.CTRL_MASK));
 		
 		Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
 		paste.setEnabled(t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor));

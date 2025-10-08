@@ -21,7 +21,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
 
@@ -185,9 +183,7 @@ class ImageItem extends JPanel {
 	void setComponentPopupMenu() {
 		final JPopupMenu popup = new JPopupMenu();
 		final JMenuItem copy = new JMenuItem(app.res.getString("copy"));
-		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ImageCanvas.CTRL_MASK));
 		final JMenuItem delete = new JMenuItem(app.res.getString("delete"));
-		delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		
 		popup.add(copy);
 		canvas.pasteComponentPopupMenu(popup);
