@@ -104,7 +104,7 @@ public class MapHeader {
 	 * Constructs the header from a bitmap icon. Note the multiplication of the
 	 *  vertical offset by 2 and a bitmap remnant that was used by Windows XP.
 	 * 
-	 * @param header	.
+	 * @param length	The length of the header plus the length of the bit sequence.
 	 * @param power	The length of one side.
 	 * @return	The resulting header bitmap.
 	 */

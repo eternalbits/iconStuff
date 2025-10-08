@@ -234,7 +234,7 @@ public class Static {
 	
 	/**
 	 * A {@code String} {@code item} is a number possibly followed by several letters,
-	 *  from which you simply want to extract the number.
+	 *  from which you simply want to extract the first number.
 	 *
 	 * @param item	Number followed by several letters and numbers.
 	 * @return	Just the number or {@code -1}.

@@ -65,7 +65,7 @@ class ImageItem extends JPanel {
 		this.fs = fs;
 		Dimension dim = new Dimension(fs.size > 256? 256: fs.size, fs.size > 256? 256: fs.size);
 		st_image = new JLabel(new ImageIcon(fs.image.getScaledInstance(dim.width, dim.height, Image.SCALE_DEFAULT)));			
-		String fs_size = Static.getSize(fs.layout);
+		String fs_size = String.valueOf(Static.getInteger(fs.layout));
 		String fs_icon = Static.getIcon(fs.layout);
 		cb_type = new JComboBox<String>(copyIcns(fs.size+" "+fs_icon));
 		cb_type.setSelectedItem(fs.type);

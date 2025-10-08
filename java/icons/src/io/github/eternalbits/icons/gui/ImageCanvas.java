@@ -75,7 +75,7 @@ class ImageCanvas extends JPanel {
 	
 	void doRepaint(ListItem image) {
 		this.image = image;
-		if (ic_item != null) 
+		if (local.size() > 0) if (ic_item != null) 
 		for (int i = 0; i < ic_item.length; i++) {
 			panel.remove(ic_item[i]);
 		}
