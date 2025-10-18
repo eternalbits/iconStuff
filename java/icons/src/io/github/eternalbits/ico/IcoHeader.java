@@ -97,6 +97,8 @@ class IcoHeader {
 		if (local.isEmpty()) return;
 		
 		RandomAccessFile to = ico.getMedia();
+		ico.done = true;
+		to.setLength(0);
 		
 		/**
 		 * Writes the header and the structure of image directory empty

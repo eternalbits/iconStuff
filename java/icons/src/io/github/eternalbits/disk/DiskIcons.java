@@ -43,6 +43,7 @@ public abstract class DiskIcons implements AutoCloseable {
 	
 	public abstract List<DiskIconsView> getFiles();		// Represents the structure of an icon through repeated DiskIconsView input.
 	public abstract void putIcon(DiskIconsView fs);		// Represents the structure of an entry outside of DiskIconsView.
+	public boolean done = false;						// To see if burning to disk worked.
 	
 	public DiskImageView getView() {					// Accessing an icon's structure through repeated DiskIconsView entries.
 		return new DiskImageView(this);

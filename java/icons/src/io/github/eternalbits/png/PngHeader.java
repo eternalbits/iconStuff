@@ -76,6 +76,8 @@ class PngHeader {
 		 */
 		if (es != null) {
 			RandomAccessFile to = png.getMedia();
+			png.done = true;
+			to.setLength(0);
 			BufferedImage es_image = Static.copyPng(es.image, es.size, es.layout);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();					// Passing bytes from a saved image to PNG
 			ImageIO.write(es_image, "png", baos);

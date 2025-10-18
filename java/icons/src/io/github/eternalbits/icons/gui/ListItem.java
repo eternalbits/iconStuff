@@ -124,10 +124,12 @@ class ListItem {
 				}
 			}
 		}
-		File copy = null;
 		boolean save = image.getPath().equals(to.getPath());
+		boolean done = false;
+		File copy = null;
 		try (DiskIcons clone = DiskImage.create(type, to, image, type.equals("ICO") ? icon : null)) {
 			copy = to; // copy open by DiskImage
+			done = clone.done;
 			if (save) 
 				image.setUndo(false);
 		} catch (IOException | WrongHeaderException e) {
@@ -139,7 +141,7 @@ class ListItem {
 					copy.delete();
 				else app.addToList(to);
 				String result = save ? "changed" : "created";
-				System.out.println(to != null && to.isFile()? String.format(app.res.getString("image_"+result), 
+				System.out.println(to != null && to.isFile() && done == true? String.format(app.res.getString("image_"+result), 
 						to.getName(), to.getAbsoluteFile().getParent()): app.res.getString("image_not_"+result));
 			}
 		}

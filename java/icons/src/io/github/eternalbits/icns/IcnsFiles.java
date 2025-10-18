@@ -50,8 +50,8 @@ public class IcnsFiles extends DiskIcons {
 	public IcnsFiles(File file, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, "rw");
 		try { // Always close media on Exception
-			media.setLength(0);
 			path = file.getPath();
+			done = false;
 			setType();
 			
 			header = new IcnsHeader(this, image, icon);

@@ -229,6 +229,8 @@ class IcnsHeader {
 		if (local.isEmpty()) return;
 		
 		RandomAccessFile to = icns.getMedia();
+		icns.done = true;
+		to.setLength(0);
 		
 		/**
 		 * If you have more than one icon you create the Table of contents
