@@ -74,6 +74,8 @@ class ImageItem extends JPanel {
 		cb_icon = new JComboBox<String>(sz_icon);
 		cb_icon.setSelectedItem(fs_icon);
 		
+	//	Updated ImageItem to set icon size from combo box selection
+		fs.size = Integer.parseInt(String.valueOf(cb_size.getSelectedItem()));
 		doRepaint(dim, allCombo);
 		
 		cb_type.addActionListener(new ActionListener() {

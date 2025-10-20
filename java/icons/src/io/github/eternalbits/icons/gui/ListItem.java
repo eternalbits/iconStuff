@@ -124,24 +124,30 @@ class ListItem {
 				}
 			}
 		}
+	//	File copy logic to better handle file deletion and reporting when icon creation fails
 		boolean save = image.getPath().equals(to.getPath());
-		boolean done = false;
-		File copy = null;
-		try (DiskIcons clone = DiskImage.create(type, to, image, type.equals("ICO") ? icon : null)) {
-			copy = to; // copy open by DiskImage
-			done = clone.done;
+		String save_as = save ? "save_msg" : "save_as_msg";
+		String result = save ? "changed" : "created";
+		Boolean done = null;
+		try (DiskIcons clone = DiskImage.create(type, to, image, type.toLowerCase().equals("ico") ? icon : null)) {
+			done = clone.done;	// done open by DiskImage
 			if (save) 
 				image.setUndo(false);
 		} catch (IOException | WrongHeaderException e) {
 			e.printStackTrace();
 		}
 		finally {
-			if (copy != null) {
-				if (copy.isFile() && copy.length() == 0) 
-					copy.delete();
-				else app.addToList(to);
-				String result = save ? "changed" : "created";
-				System.out.println(to != null && to.isFile() && done == true? String.format(app.res.getString("image_"+result), 
+			if (done != null) {
+				if (to.isFile() && done == false) {
+					if (!save && to.length() == 0) 
+						to.delete();
+					JOptionPane.showMessageDialog(app, 
+							String.format(app.res.getString("image_not_"+result)), 
+							app.res.getString(save_as), JOptionPane.ERROR_MESSAGE);
+				} else {
+					app.addToList(to);
+				}
+				System.out.println(to != null && to.isFile() && done? String.format(app.res.getString("image_"+result), 
 						to.getName(), to.getAbsoluteFile().getParent()): app.res.getString("image_not_"+result));
 			}
 		}

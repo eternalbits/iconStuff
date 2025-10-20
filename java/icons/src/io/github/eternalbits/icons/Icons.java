@@ -71,19 +71,20 @@ public class Icons {
 	 * @param icon	A list with the icon and output.
 	 */
 	private void copy(File from, File to, String type, String icon) throws IOException, WrongHeaderException {
-		boolean done = false;
-		File copy = null;
+	//	File copy logic to better handle file deletion and reporting when icon creation fails
+		boolean save = from.getPath().equals(to.getPath());
+		Boolean done = null;
 		try (DiskIcons image = DiskImage.open(from, "r")) {
 			try (DiskIcons clone = DiskImage.create(type, to, image, icon)) {
-				copy = to; // copy open by DiskImage
-				done = clone.done;
+				done = clone.done;	// done open by DiskImage
 			}
 		}
 		finally {
-			if (copy != null) {
-				if (copy.isFile() && copy.length() == 0) 
-					copy.delete();
-				System.out.println(to != null && to.isFile() && done == true? String.format(IMAGE_CREATED, 
+			if (done != null) {
+				if (to.isFile() && done == false) 
+					if (!save && to.length() == 0) 
+						to.delete();
+				System.out.println(to != null && to.isFile() && done? String.format(IMAGE_CREATED, 
 						to.getName(), to.getAbsoluteFile().getParent()): IMAGE_NOT_CREATED);
 			}
 		}

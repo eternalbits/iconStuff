@@ -83,21 +83,24 @@ class ImageCanvas extends JPanel {
 		
 		String type = Static.getExtension(image.getFile()).toLowerCase();
 		local = new ArrayList<DiskIconsView>();
-
+		
+	//	Ensure at least one icon is displayed if all are filtered
+		DiskIconsView es = null;
+		
 		for (int i = 0; i < image.getView().fileIcons.size(); i++) {
 			DiskIconsView fs = image.getView().fileIcons.get(i);
 			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
 				int ico = -1;
 				if (fs.size == 0)
 					fs.size = Static.getInteger(fs.layout);
-				if (fs.offset != 0 && fs.length != 0) {
-					int size = Static.getInteger(fs.layout);
+			//	Only file icons have a length, not the copied ones
+				if (fs.length != 0) {
 					if (app.settings.ignoreIconsLarger256) {
-						if (size > 256) ico = i;
+						if (fs.size > 256) { ico = i; es = fs; }
 					}
 					if (app.settings.ignoreDuplicateIcons) {
 						for (DiskIconsView fm: local) {
-							if (size == Static.getInteger(fm.layout)) ico = i;
+							if (fs.size == fm.size) ico = i;
 						}
 					}
 				}
@@ -109,6 +112,9 @@ class ImageCanvas extends JPanel {
 			}
 		}
 		
+		if (local.size() == 0 && es != null) {
+			local.add(es);
+		}	
 		if (app.settings.iconsDescendingOrder) {
 			Collections.sort(local);
 		}
