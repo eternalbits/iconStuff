@@ -40,6 +40,7 @@ class SettingsDialog extends JDialog {
 	
 	private final JCheckBox filterImageFiles;
 	private final JCheckBox warnSaveOperation;
+	private final JCheckBox uncheckUsingSaveAs;
 	private final JCheckBox iconsDescendingOrder;
 	
 	private final JCheckBox warnSaveNonStandard;
@@ -109,6 +110,7 @@ class SettingsDialog extends JDialog {
 		open.setBorder(new TitledBorder(boxBorder, app.res.getString("open")));
 		open.add(filterImageFiles	  = new JCheckBox(app.res.getString("set_filter_image"), app.settings.filterImageFiles));
 		open.add(warnSaveOperation    = new JCheckBox(app.res.getString("set_save_operation"), app.settings.warnSaveOperation));
+		open.add(uncheckUsingSaveAs   = new JCheckBox(app.res.getString("set_uncheck_save_as"), app.settings.uncheckUsingSaveAs));
 		open.add(iconsDescendingOrder = new JCheckBox(app.res.getString("set_descending_order"), app.settings.iconsDescendingOrder));
 
 		Box icns = Box.createVerticalBox();
@@ -135,6 +137,7 @@ class SettingsDialog extends JDialog {
 				app.settings.selectedCountry 		= ((Language)selectedString.getSelectedItem()).country;
 				app.settings.filterImageFiles 		= filterImageFiles.isSelected();
 				app.settings.warnSaveOperation	 	= warnSaveOperation.isSelected();
+				app.settings.uncheckUsingSaveAs 	= uncheckUsingSaveAs.isSelected();
 				app.settings.iconsDescendingOrder 	= iconsDescendingOrder.isSelected();
 				app.settings.warnSaveNonStandard 	= warnSaveNonStandard.isSelected();
 				app.settings.ignoreIconsLarger256 	= ignoreIconsLarger256.isSelected();

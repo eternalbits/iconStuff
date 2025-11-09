@@ -43,6 +43,7 @@ class Settings implements Serializable {
 	String selectedCountry = Locale.getDefault().getCountry();
 	boolean filterImageFiles = true;
 	boolean warnSaveOperation = false;
+	boolean uncheckUsingSaveAs = false;
 	boolean iconsDescendingOrder = true;
 	
 	// ICNS dialog

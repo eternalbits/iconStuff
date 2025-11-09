@@ -389,20 +389,24 @@ public class FrontEnd extends JFrame {
 		if (list.getSelectedIndex() != -1) {
 			
 			if (listData.get(i).stopRun(view.getIcon(), i, false)) {
-				File file = listData.get(i).getFile();
-				
-				try (DiskIcons image = DiskImage.open(file, "r")) {
-					listData.set(i, new ListItem(this, image, file));
-					list.setSelectedIndex(i);
-					updateDiskIcon();
-					saveButton(i);
-					
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(this, 
-							Static.wordWrap(Static.simpleString(e)), 
-							res.getString("error"), JOptionPane.ERROR_MESSAGE);
-				}
+				refreshThis(i);
 			}
+		}
+	}
+	
+	void refreshThis(int i) {
+		File file = listData.get(i).getFile();
+		
+		try (DiskIcons image = DiskImage.open(file, "r")) {
+			listData.set(i, new ListItem(this, image, file));
+			list.setSelectedIndex(i);
+			updateDiskIcon();
+			saveButton(i);
+			
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, 
+					Static.wordWrap(Static.simpleString(e)), 
+					res.getString("error"), JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

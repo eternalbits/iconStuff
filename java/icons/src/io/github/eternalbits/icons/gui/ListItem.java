@@ -134,7 +134,9 @@ class ListItem {
 			if (save) 
 				image.setUndo(false);
 		} catch (IOException | WrongHeaderException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(app, 
+					String.format(app.res.getString("image_abnormal")+" "+app.res.getString("image_not_"+result)), 
+					app.res.getString(save_as), JOptionPane.ERROR_MESSAGE);
 		}
 		finally {
 			if (done != null) {
@@ -145,6 +147,14 @@ class ListItem {
 							String.format(app.res.getString("image_not_"+result)), 
 							app.res.getString(save_as), JOptionPane.ERROR_MESSAGE);
 				} else {
+					if (!save && app.settings.uncheckUsingSaveAs) {
+						for (int i = 0, s = app.listData.getSize(); i < s; i++) {
+							if (app.listData.get(i).getFile().equals(file)) {
+								app.refreshThis(i);
+								break;
+							}
+						}
+					}
 					app.addToList(to);
 				}
 				System.out.println(to != null && to.isFile() && done? String.format(app.res.getString("image_"+result), 

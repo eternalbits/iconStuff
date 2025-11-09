@@ -77,6 +77,8 @@ public class Icons {
 		try (DiskIcons image = DiskImage.open(from, "r")) {
 			try (DiskIcons clone = DiskImage.create(type, to, image, icon)) {
 				done = clone.done;	// done open by DiskImage
+			} catch (IOException e) {
+				System.out.println(IMAGE_NOT_CREATED);
 			}
 		}
 		finally {
