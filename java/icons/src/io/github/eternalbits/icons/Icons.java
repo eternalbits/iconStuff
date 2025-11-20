@@ -49,7 +49,7 @@ import io.github.eternalbits.icons.gui.FrontEnd;
 public class Icons {
 
 	private final static String IMAGE_CREATED = "The '%s' was created in the '%s' directory.";
-	private final static String IMAGE_NOT_CREATED = "No icons were created.";
+	private final static String IMAGE_NOT_CREATED = "The operation ended abnormally. No icon was created.";
 	
 	/**
 	 * Outputs --dump to a file as described in {@link DiskImageShow}.
@@ -218,7 +218,7 @@ public class Icons {
 				if (!cmd.hasOption("o") && to.exists())
 					throw new ParseException(String.format(FILE_ALREADY_EXISTS, to));
 				
-				if (from.equals(to))
+				if (!cmd.hasOption("i") && from.equals(to))
 					throw new ParseException(String.format(FILES_ARE_DUPLICATED, to));
 				
 				String f = cmd.hasOption("f")? cmd.getOptionValue("f").toLowerCase(): null;
@@ -246,7 +246,7 @@ public class Icons {
 			
 		} catch (ParseException | IOException | WrongHeaderException e) {
 			printHelp(options);
-			System.out.println("\n\n"+Static.simpleString(e));
+			System.out.println("\n"+Static.simpleString(e));
 			System.exit(1);
 		}
 
@@ -267,7 +267,7 @@ public class Icons {
 		String header = "\nTo convert ICO to ICNS disk icons. Version "+version+"\n\n";
 		String footer = ("\nOne of ^copy or ^dump is required\n^icon can be a phrase like\n"
 				+ "2=bit;3=*;4=64:bit;?=48:bit;?=24:bit for ICO or\n"
-				+ "1=ic05:png;2=ic04:bit;3=*;?=128:png for ICNS\n\n").replace("^", prefix);
+				+ "1=ic05:png;2=ic04:bit;3=*;?=128:png for ICNS\n").replace("^", prefix);
 		formatter.setLongOptPrefix(" "+prefix);
 		formatter.printHelp("java -jar "+jar, header, options, footer, true);
 	}
