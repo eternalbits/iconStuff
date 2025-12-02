@@ -16,11 +16,15 @@
 
 package io.github.eternalbits.icons.gui;
 
+import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -123,12 +127,25 @@ class SettingsDialog extends JDialog {
 		ico.add(ignoreDuplicateIcons = new JCheckBox(app.res.getString("set_ico_duplicate"), app.settings.ignoreDuplicateIcons));
 		
 		Box cmd = Box.createHorizontalBox();
+		JLabel website = new JLabel("<html><font color='blue'><u>"+app.res.getString("website")+"</u></font><html>");
 		JButton apply = new JButton(app.res.getString("apply_text"));
 		JButton cancel = new JButton(app.res.getString("cancel_text"));
-		cmd.add(new JLabel(app.res.getString("author")));
+		cmd.add(website);
 		cmd.add(Box.createHorizontalGlue());
 		cmd.add(apply);
 		cmd.add(cancel);
+		
+		website.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				try {
+					URI uri = new URI("https://github.com/eternalbits/iconStuff");
+					Desktop.getDesktop().browse(uri);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		apply.addActionListener(new ActionListener() {
 			@Override
