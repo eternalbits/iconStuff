@@ -98,8 +98,8 @@ public class Icons {
 	private final static String INCORRECT_COMMAND = "The syntax of the command is incorrect.";
 	private final static String TOO_MANY_OPTIONS = "There are too many options: %s.";
 	
-	private static final String version = "1.5";
-	private static final String year = "-2025";
+	private static final String version = "1.6";
+	private static final String year = "-2026";
 	private static final String jar = new java.io.File(Icons.class.getProtectionDomain()
 			.getCodeSource().getLocation().getPath()).getName();
 
