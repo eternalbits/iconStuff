@@ -17,6 +17,7 @@
 package io.github.eternalbits.icons.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -32,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -75,10 +77,8 @@ class ImageCanvas extends JPanel {
 	
 	void doRepaint(ListItem image) {
 		this.image = image;
-		if (local.size() > 0) if (ic_item != null) 
-		for (int i = 0; i < ic_item.length; i++) {
-			panel.remove(ic_item[i]);
-		}
+		for (Component c : panel.getComponents())
+			panel.remove(c);
 		icon = null;
 		
 		String type = Static.getExtension(image.getFile()).toLowerCase();
@@ -114,16 +114,22 @@ class ImageCanvas extends JPanel {
 		
 		if (local.size() == 0 && es != null) {
 			local.add(es);
-		}	
-		if (app.settings.iconsDescendingOrder) {
-			Collections.sort(local);
 		}
 		ic_item = new ImageItem[local.size()];
 		
-		for (int i = 0; i < local.size(); i++) {
-			ic_item[i] = new ImageItem(app, image, this, local.get(i), allCombo);
-			ic_item[i].setComponentPopupMenu(); 
-			panel.add(ic_item[i]);
+		if (local.size() == 0) {
+			JLabel label = new JLabel(Static.wordWrap("\n\n\n\n"+app.res.getString("no_icon_text")));
+			label.setHorizontalAlignment(JLabel.CENTER);
+			panel.add(label);
+		} else {
+			if (app.settings.iconsDescendingOrder) {
+				Collections.sort(local);
+			}
+			for (int i = 0; i < local.size(); i++) {
+				ic_item[i] = new ImageItem(app, image, this, local.get(i), allCombo);
+				ic_item[i].setComponentPopupMenu(); 
+				panel.add(ic_item[i]);
+			}
 		}
 		
 		validate();
