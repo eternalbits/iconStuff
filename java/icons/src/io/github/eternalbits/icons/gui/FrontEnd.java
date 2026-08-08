@@ -122,7 +122,7 @@ public class FrontEnd extends JFrame {
 	/**
 	 * The convert ICO and ICNS disk icons graphical user interface.
 	 */
-	public FrontEnd() {
+	public FrontEnd(String[] args) throws IOException {
 		setIconImage(new ImageIcon(getResource("monkey.png")).getImage());
 		String osName = System.getProperty("os.name").toLowerCase();
 		isWindows = osName.indexOf("windows") >= 0;
@@ -162,6 +162,9 @@ public class FrontEnd extends JFrame {
 		// Display the window
 		pack();
 		setVisible(true);
+		for (int i = 0; i < args.length; i++) {
+			addToList((new File(args[i])).getCanonicalFile());
+		}
 		onSelectListItem();
 	}
 

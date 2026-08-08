@@ -110,12 +110,16 @@ public class Icons {
 	 */
 	public static void main(String[] args) throws Exception {
 		
-		if (args.length == 0 && !GraphicsEnvironment.isHeadless()) {
+		if (argsLength(args) && !GraphicsEnvironment.isHeadless()) {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					new FrontEnd();
+					try {
+						new FrontEnd(args);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			});
 			return;
@@ -125,6 +129,15 @@ public class Icons {
 		
 	}
 
+	private static boolean argsLength(String[] args) {
+		for (int i = 0; i < args.length; i++) {
+			if (!new File(args[i]).exists()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * Parameter descriptions.
 	 */
@@ -175,26 +188,6 @@ public class Icons {
 			options.addOption(opt);
 		}
 		try {
-			if (args.length == 1) {
-				File file = new File(args[0]);
-				if (file.exists() && file.isFile()) {
-					showView(file);
-					return;
-				}
-			}
-			if (args.length == 2) {
-				File from = new File(args[0]);
-				File to = new File(args[1]);
-				if ((from.exists() && from.isFile())
-						&& !to.exists()) {
-					String f = Static.getExtension(to).toLowerCase();
-					if (!Arrays.asList(DEFAULT_FILE_FILTER).contains(f))
-						throw new ParseException(INCORRECT_COMMAND);
-					copy(from, to, f, null);
-					return;
-				}
-			}
-			
 			CommandLine cmd = new DefaultParser().parse(helpers, args, true);
 			if (cmd.hasOption("version")) {
 				printAbout();
