@@ -138,6 +138,8 @@ class ImageItem extends JPanel {
 		for (String st: sz_size) 
 			if (Integer.parseInt(st) <= size)
 				type.add(st);
+		if (!type.contains(fs_size))
+			type.add(0, fs_size);
 		return type.toArray(new String[0]);
 	}
 	
