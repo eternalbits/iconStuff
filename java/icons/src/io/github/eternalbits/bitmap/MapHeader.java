@@ -67,13 +67,13 @@ public class MapHeader {
 	 * @return	The length of the Bitmap.
 	 */
 	public int writeBitmap(BufferedImage image, RandomAccessFile to, int power) throws IOException {
-		int length = 40 + 4 * power * power + power * Static.roundUp(power / 8, 4);
+		int length = 40 + 4 * power * power + 4 * Static.ceilDiv(power, 32) * power;
 		byte[] buffer = Static.toBitmap(image, power);
 		to.write(headerForIcon(length, power));
 		int diff = 4 * power;
 		for (int i = power * diff - diff; i >= 0; i -= diff)
 			to.write(buffer, i, diff);
-		int padd = Static.roundUp(power / 8, 4);
+		int padd = 4 * Static.ceilDiv(power, 32);
 		byte[] trailer = trailerForIcon(buffer, power);
 		for (int i = power * padd - padd; i >= 0; i -= padd)
 			to.write(trailer, i, padd);
@@ -136,7 +136,7 @@ public class MapHeader {
 	 * @return	The resulting bitmap.
 	 */
 	private byte[] trailerForIcon(byte[] source, int power) {
-		int padd = Static.roundUp(power / 8, 4);
+		int padd = 4 * Static.ceilDiv(power, 32);
 		byte[] trailer = new byte[power * padd];
 		ByteBuffer tw = ByteBuffer.wrap(trailer).order(ByteOrder.LITTLE_ENDIAN);
 		ByteBuffer tr = ByteBuffer.wrap(source).order(ByteOrder.LITTLE_ENDIAN);

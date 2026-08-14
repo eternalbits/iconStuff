@@ -299,7 +299,18 @@ public class Static {
 	public static int roundUp(int num, int div) {
 		return (num + div - 1) / div * div;
 	}
-	
+
+	/**
+	 * Returns an integer {@code num/div} rounded up. Does not work with dividend 0 (zero).
+	 *
+	 * @param num	An integer divided by a divisor that you want to round up.
+	 * @param div	The number of digits to which you want to round number.
+	 * @return	Rounds a number up.
+	 */
+	public static int ceilDiv(int num, int div) {
+		return (num + div - 1) / div;
+	}
+
 	/**
 	 * Returns the length of the bitmap depending on the bitmap header, its length
 	 *  and the remaining bitmap.
@@ -308,7 +319,7 @@ public class Static {
 	 * @return	Result of expression.
 	 */
 	public static int bitmapRound(int width) {
-		return 40 + 4 * width * width + Static.roundUp(width / 8, 4) * width;
+		return 40 + 4 * width * width + 4 * Static.ceilDiv(width, 32) * width;
 	}
 	
 	/**
