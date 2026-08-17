@@ -297,6 +297,7 @@ public class FrontEnd extends JFrame {
 						index, isSelected, cellHasFocus);
 				if (c instanceof JLabel) {
 					JLabel j = (JLabel) c;
+					j.setToolTipText(listData.get(index).getFile().getPath());
 					j.setBorder(new CompoundBorder(j.getBorder(), new EmptyBorder(4, 4, 4, 0)));
 				}
 				return c;
