@@ -63,7 +63,7 @@ class PngHeader {
 		DiskIconsView es = null;
 		int i = 0, m = 0;
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
+			if (fs.isIcon > 0 && fs.isIcon != DiskIcons.ICON_JP2 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
 				if (fs.size == 0)
 					fs.size = Static.getInteger(fs.layout);
 				i = Static.getInteger(fs.description);
@@ -106,7 +106,7 @@ class PngHeader {
 				view.offset = 0;
 				view.length = (int) png.getLength();
 				view.type = png.getType();
-				view.description = this.ImageHeader(png, HEADER_SIZE, view.length);
+				view.description = this.ImageHeader(png, HEADER_SIZE, view.length - HEADER_SIZE);
 				view.image = this.createPng(png, view.offset, view.length);
 				view.layout = view.description;
 				disk.add(view);
@@ -168,7 +168,7 @@ class PngHeader {
 			offset += 4;
 		}
 		
-		if (offset - previous != size - 8)
+		if (offset - previous != size)
 			throw new WrongHeaderException(DiskIcons.class, img.getPath());
 		
 		String dimension = String.valueOf(dim[0]);

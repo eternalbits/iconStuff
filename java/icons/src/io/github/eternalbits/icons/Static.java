@@ -319,7 +319,7 @@ public class Static {
 	 * @return	Result of expression.
 	 */
 	public static int bitmapRound(int width) {
-		return 40 + 4 * width * width + 4 * Static.ceilDiv(width, 32) * width;
+		return 40 + 4 * width * width + 4 * ceilDiv(width, 32) * width;
 	}
 	
 	/**
@@ -331,7 +331,7 @@ public class Static {
 	 * @return	Result of expression.
 	 */
 	public static int appleRound(int num, int width) {
-		return num * width * width + Static.roundUp(num * width * width, 0x7F) / 0x7F;
+		return num * width * width + roundUp(num * width * width, 0x7F) / 0x7F;
 	}
 	
 	/**

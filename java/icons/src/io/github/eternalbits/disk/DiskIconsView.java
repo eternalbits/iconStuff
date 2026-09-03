@@ -27,7 +27,7 @@ import io.github.eternalbits.icons.Static;
 public class DiskIconsView implements Comparable<DiskIconsView> {
 	
 	public int				isIcon;				// This is the input icon type that goes from NOT_AN_ICON to ICON_ARGB
-	public int				forIcon;			// This is the output icon type which is PNG, BITMAP, APPLE, MASK, ARGB
+	public int				forIcon;			// This is the output icon type which is PNG, BITMAP, APPLE, MASK, ARGB, JP2
 	public int				offset;				// The offset goes from the beginning of the file to the beginning of the icon
 	public int				length;				// Icon length, in bytes
 	public int				size;				// Image size while changing
@@ -35,6 +35,7 @@ public class DiskIconsView implements Comparable<DiskIconsView> {
 	public String			description;		// A brief description of the icon for the viewer
 	public String			layout;				// A detailed description for programming
 	public BufferedImage	image;				// A PNG image
+	public byte[]			jpeg2;				// A JP2 image
 	
 	@Override
 	public int compareTo(DiskIconsView other) {

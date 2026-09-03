@@ -57,6 +57,7 @@ class ImageItem extends JPanel {
 	private final ListItem image;
 	private final ImageCanvas canvas;
 	private final DiskIconsView fs;
+	private final boolean jp2;
 	
 	ImageItem(FrontEnd frontEnd, ListItem image, ImageCanvas canvas, DiskIconsView fs, int allCombo) {
 		app = frontEnd;
@@ -67,12 +68,20 @@ class ImageItem extends JPanel {
 		st_image = new JLabel(new ImageIcon(fs.image.getScaledInstance(dim.width, dim.height, Image.SCALE_DEFAULT)));			
 		String fs_size = String.valueOf(Static.getInteger(fs.layout));
 		String fs_icon = Static.getIcon(fs.layout);
-		cb_type = new JComboBox<String>(copyIcns(fs.size+" "+fs_icon));
-		cb_type.setSelectedItem(fs.type);
-		cb_size = new JComboBox<String>(copySize(fs_size));
-		cb_size.setSelectedItem(String.valueOf(fs.size));
-		cb_icon = new JComboBox<String>(sz_icon);
-		cb_icon.setSelectedItem(fs_icon);
+		if (fs.isIcon == DiskIcons.ICON_JP2) {
+			cb_type = new JComboBox<>(new String[] {fs.type});
+			cb_size = new JComboBox<>(new String[] {fs_size});
+			cb_icon = new JComboBox<>(new String[] {"JP2"});
+			jp2 = true;
+		} else {
+			cb_type = new JComboBox<>(copyIcns(fs.size+" "+fs_icon));
+			cb_type.setSelectedItem(fs.type);
+			cb_size = new JComboBox<>(copySize(fs_size));
+			cb_size.setSelectedItem(String.valueOf(fs.size));
+			cb_icon = new JComboBox<>(sz_icon);
+			cb_icon.setSelectedItem(fs_icon);
+			jp2 = false;
+		}
 		
 	//	Updated ImageItem to set icon size from combo box selection
 		fs.size = Integer.parseInt(String.valueOf(cb_size.getSelectedItem()));
@@ -189,6 +198,7 @@ class ImageItem extends JPanel {
 		final JMenuItem copy = new JMenuItem(app.res.getString("copy"));
 		final JMenuItem delete = new JMenuItem(app.res.getString("delete"));
 		
+		copy.setEnabled(!jp2);
 		popup.add(copy);
 		canvas.pasteComponentPopupMenu(popup);
 		popup.add(delete);

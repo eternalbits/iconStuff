@@ -22,6 +22,7 @@ import java.io.RandomAccessFile;
 
 import io.github.eternalbits.icns.IcnsFiles;
 import io.github.eternalbits.ico.IcoFiles;
+import io.github.eternalbits.jp2.Jp2Files;
 import io.github.eternalbits.png.PngFiles;
 
 /**
@@ -54,6 +55,8 @@ public class DiskImage {
 					return new IcoFiles(file, mode);
 				case PngFiles.ICON_PGN:								// '%PNG' for PNG
 					return new PngFiles(file, mode);
+				case Jp2Files.ICON_JP2:								// '....' for JP2
+					return new Jp2Files(file, mode);
 				}
 			} catch (WrongHeaderException e) {}
 		}
@@ -82,6 +85,9 @@ public class DiskImage {
 		}
 		if ("png".equalsIgnoreCase(type)) {
 			return new PngFiles(file, image, icon);
+		}
+		if ("jp2".equalsIgnoreCase(type)) {
+			return new Jp2Files(file, image, icon);
 		}
 		
 		throw new IllegalArgumentException(String.format("%s: %s", UNKNOWN_TYPE, type));

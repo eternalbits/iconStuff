@@ -89,7 +89,7 @@ class ImageCanvas extends JPanel {
 		
 		for (int i = 0; i < image.getView().fileIcons.size(); i++) {
 			DiskIconsView fs = image.getView().fileIcons.get(i);
-			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+			if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB, JP2
 				int ico = -1;
 				if (fs.size == 0)
 					fs.size = Static.getInteger(fs.layout);

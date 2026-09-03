@@ -42,6 +42,7 @@ public class DiskImageShow {
 		icon.put(3, "ICON_APPLE");
 		icon.put(4, "ICON_MASK");
 		icon.put(5, "ICON_ARGB");
+		icon.put(6, "ICON_JP2");
 	}
 	
 	/**

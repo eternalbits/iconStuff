@@ -35,6 +35,7 @@ public abstract class DiskIcons implements AutoCloseable {
 	public static final int ICON_APPLE = 3;				// It's an icon with two parts, one is the RGB part from Apple.
 	public static final int ICON_MASK = 4;				// It's an icon with two parts, other is the mask from Apple.
 	public static final int ICON_ARGB = 5;				// It's an icon with ARGB part from Apple.
+	public static final int ICON_JP2 = 6;				// It's a JP2 type icon.
 	
 	protected RandomAccessFile media = null;			// All inputs and outputs are done through a RandomAccessFile.
 	public RandomAccessFile getMedia() {

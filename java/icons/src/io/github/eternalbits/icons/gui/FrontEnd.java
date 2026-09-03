@@ -83,8 +83,8 @@ import io.github.eternalbits.icons.Static;
 public class FrontEnd extends JFrame {
 	private static final long serialVersionUID = 2265801119904942445L;
 
-	private static final String DEFAULT_FILE_FILTER = ".+\\.(?i:ico|icns|png)";
-	private static final String WINDOWS_FILE_FILTER = "*.ico;*.icns;*.png";
+	private static final String DEFAULT_FILE_FILTER = ".+\\.(?i:ico|icns|png|jp2)";
+	private static final String WINDOWS_FILE_FILTER = "*.ico;*.icns;*.png;*.jp2";
 	
 	/* The window: a tool bar with command buttons, a list with known images,
 	 *  and a main area with the selected image or a help/about dialog. 
@@ -780,7 +780,7 @@ public class FrontEnd extends JFrame {
 	 * @param name	The name of the resource.
 	 * @return	The resource URL, or {@code null} if the resource does not exist.
 	 */
-	static URL getResource(String name) {
+	public static URL getResource(String name) {
 		String path = FrontEnd.class.getPackage().getName().replace('.', '/');
 		return FrontEnd.class.getClassLoader().getResource(path + '/' + name);
 	}

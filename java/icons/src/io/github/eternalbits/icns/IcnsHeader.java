@@ -30,6 +30,7 @@ import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
 import io.github.eternalbits.disk.WrongHeaderException;
 import io.github.eternalbits.icons.Static;
+import io.github.eternalbits.jp2.Jp2Header;
 import io.github.eternalbits.png.PngFiles;
 import io.github.eternalbits.png.PngHeader;
 
@@ -43,6 +44,7 @@ class IcnsHeader {
 	
 	private final PngHeader img;	// Parent object to associated PNG
 	private final AppHeader app;	// Parent object to associated APPLE and ARGB
+	private final Jp2Header jp2;	// Parent object to associated JPEG 2000
 	
 	List<DiskIconsView> disk = new ArrayList<DiskIconsView>();
 
@@ -140,26 +142,43 @@ class IcnsHeader {
 			new OSMatch("it32", "128 32-bit", 3, "t8mk"),
 			new OSMatch("icp4", "16 PNG", 1, null),
 			new OSMatch("icp4", "16 32-bit", 3, "s8mk"),
+			new OSMatch("icp4", "16 JP2", 6, null),
 			new OSMatch("icp5", "32 PNG", 1, null),
 			new OSMatch("icp5", "32 32-bit", 3, "l8mk"),
+			new OSMatch("icp5", "32 JP2", 6, null),
 			new OSMatch("icp6", "48 PNG", 1, null),
+			new OSMatch("icp6", "48 JP2", 6, null),
 			new OSMatch("ic07", "128 PNG", 1, null),
+			new OSMatch("ic07", "128 JP2", 6, null),
 			new OSMatch("ic08", "256 PNG", 1, null),
+			new OSMatch("ic08", "256 JP2", 6, null),
 			new OSMatch("ic09", "512 PNG", 1, null),
+			new OSMatch("ic09", "512 JP2", 6, null),
 			new OSMatch("ic10", "1024 PNG", 1, null),
+			new OSMatch("ic10", "1024 JP2", 6, null),
 			new OSMatch("ic11", "32 PNG", 1, null),
+			new OSMatch("ic11", "32 JP2", 6, null),
 			new OSMatch("ic12", "64 PNG", 1, null),
+			new OSMatch("ic12", "64 JP2", 6, null),
 			new OSMatch("ic13", "256 PNG", 1, null),
+			new OSMatch("ic13", "256 JP2", 6, null),
 			new OSMatch("ic14", "512 PNG", 1, null),
+			new OSMatch("ic14", "512 JP2", 6, null),
 			new OSMatch("ic04", "16 PNG", 1, null),
 			new OSMatch("ic04", "16 32-bit", 5, null),
+			new OSMatch("ic04", "16 JP2", 6, null),
 			new OSMatch("ic05", "32 PNG", 1, null),
 			new OSMatch("ic05", "32 32-bit", 5, null),
+			new OSMatch("ic05", "32 JP2", 6, null),
 			new OSMatch("icsb", "18 PNG", 1, null),
 			new OSMatch("icsb", "18 32-bit", 5, null),
+			new OSMatch("icsb", "18 JP2", 6, null),
 			new OSMatch("icsB", "36 PNG", 1, null),
+			new OSMatch("icsB", "36 JP2", 6, null),
 			new OSMatch("sb24", "24 PNG", 1, null),
+			new OSMatch("sb24", "24 JP2", 6, null),
 			new OSMatch("SB24", "48 PNG", 1, null),
+			new OSMatch("SB24", "48 JP2", 6, null),
 		};
 	
 	public static String[] OSMatch(String match, String type) {
@@ -192,6 +211,7 @@ class IcnsHeader {
 	IcnsHeader(IcnsFiles icns, DiskIcons image, String icon) throws IOException, WrongHeaderException {
 		img = new PngHeader();
 		app = new AppHeader();
+		jp2 = new Jp2Header();
 		if (image.getFiles() == null) return;
 		if (Static.delimiterIcon(icon, image))
 			throw new WrongHeaderException(getClass(), icns.getPath());
@@ -201,7 +221,7 @@ class IcnsHeader {
 		 */
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
+			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB, JP2
 				if (fs.size == 0)
 					fs.size = Static.getInteger(fs.layout);
 				String fs_layout = fs.size+" "+Static.getIcon(fs.layout);
@@ -278,6 +298,11 @@ class IcnsHeader {
 					buffer = app.writeArgb(fs_image, power);
 					fs.length = buffer.length + 8;
 				}
+				else
+				if (fs.forIcon == DiskIcons.ICON_JP2) {
+					fs.length = fs.jpeg2.length + 8;
+					buffer = fs.jpeg2;
+				}
 				else {
 					buffer = app.writePng(fs_image);
 					fs.length = buffer.length + 8;
@@ -318,6 +343,7 @@ class IcnsHeader {
 	IcnsHeader(IcnsFiles icns, ByteBuffer in) throws IOException, IOException, WrongHeaderException {
 		img = new PngHeader();
 		app = new AppHeader();
+		jp2 = new Jp2Header();
 		
 		if (in.remaining() >= HEADER_SIZE) {
 			in.order(IcnsFiles.BYTE_ORDER);
@@ -349,13 +375,13 @@ class IcnsHeader {
 					tr.order(ByteOrder.BIG_ENDIAN);
 					if (tr.limit() >= 16 && tr.getInt(8) == PngFiles.ICON_PGN && tr.getInt(12) == PngFiles.DOS_UNIX) { // %PNG....
 						view.isIcon = DiskIcons.ICON_PNG;
-						view.description = img.ImageHeader(icns, offset + 16, length - 8);
+						view.description = img.ImageHeader(icns, view.offset + 8, view.length - 8);
 						view.image = img.createPng(icns, view.offset, view.length);
 						view.layout = view.description;
 					} 
 					else 
 					if (tr.limit() >= 16 && tr.getInt(8) == 12 && tr.getInt(12) == IcnsFiles.ICON_JPEG) { // jP: JPEG 2000
-						view.description = Static.getInteger(view.description) + " JPEG 2000";
+						jp2.JpegToPng(icns, view);
 					} 
 					else 
 					if (view.type.equals("is32") || view.type.equals("il32") || view.type.equals("ih32") || view.type.equals("it32") 

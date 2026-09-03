@@ -86,7 +86,7 @@ class IcoHeader {
 		 */
 		List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.isIcon > 0 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
+			if (fs.isIcon > 0 && fs.isIcon != DiskIcons.ICON_JP2 && fs.forIcon != -1) {	// PNG, BITMAP, APPLE, ARGB
 				if (fs.size == 0)
 					fs.size = Static.getInteger(fs.layout);
 				fs.forIcon = fs.layout.endsWith("PNG")? DiskIcons.ICON_PNG: DiskIcons.ICON_BITMAP;
@@ -196,7 +196,7 @@ class IcoHeader {
 					tr = ico.readIcon(position, 8).order(ByteOrder.BIG_ENDIAN);
 					if (tr.limit() >= 8 && tr.getInt(0) == PngFiles.ICON_PGN && tr.getInt(4) == PngFiles.DOS_UNIX) { // %PNG....
 						view.isIcon = DiskIcons.ICON_PNG;
-						view.description = img.ImageHeader(ico, position + 8, size);
+						view.description = img.ImageHeader(ico, position + 8, size - 8);
 						view.image = img.createPng(ico, view.offset, view.length);
 						view.layout = view.description;
 					} else {

@@ -92,7 +92,7 @@ public class Icons {
 		}
 	}
 
-	private final static String[] DEFAULT_FILE_FILTER = {null, "icns", "ico", "png"};
+	private final static String[] DEFAULT_FILE_FILTER = {null, "icns", "ico", "png", "jp2"};
 	private final static String FILES_ARE_DUPLICATED = "File \"%s\" is the same as the old image!";
 	private final static String FILE_ALREADY_EXISTS = "File \"%s\" already exists";
 	private final static String INCORRECT_COMMAND = "The syntax of the command is incorrect.";
@@ -172,7 +172,7 @@ public class Icons {
 		source.setRequired(true);
 		options.addOptionGroup(source);
 		options.addOption(Option.builder("w").longOpt("write").desc("set <out> as destination file for copy").hasArgs().argName("out").build());
-		options.addOption(Option.builder("f").longOpt("format").desc("copy output format: ICNS, ICO or PNG").hasArgs().argName("fmt").build());
+		options.addOption(Option.builder("f").longOpt("format").desc("copy output format: ICNS, ICO, PNG or JP2").hasArgs().argName("fmt").build());
 		options.addOption(Option.builder("i").longOpt("icon").desc("a list with the icon and output").hasArgs().argName("ico").build());
 		options.addOption(Option.builder("o").longOpt("overwrite").desc("overwrite existing file on copy").build());
 		return options;

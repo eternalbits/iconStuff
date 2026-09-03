@@ -33,7 +33,7 @@ import io.github.eternalbits.icons.Icons;
 import io.github.eternalbits.icons.Static;
 
 class ListItem {
-	static final List<String> IMAGE_TYPE = Arrays.asList(new String[] {"ICO", "ICNS", "PNG"});
+	static final List<String> IMAGE_TYPE = Arrays.asList(new String[] {"ICO", "ICNS", "PNG", "JP2"});
 	
 	private final FrontEnd app;
 	private final DiskIcons image;
@@ -112,7 +112,7 @@ class ListItem {
 	void copy(File to, String type, String icon) {
 		if (type.toLowerCase().equals("icns") && app.settings.warnSaveNonStandard) {
 			for (DiskIconsView fs: getView().fileIcons) {
-				if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB
+				if (fs.isIcon > 0) {	// PNG, BITMAP, APPLE, ARGB, JP2
 					String fs_layout = fs.size+" "+Static.getIcon(fs.layout);
 					String[] fs_type = IcnsHeader.OSMatch(fs_layout, fs.type);
 					if (fs_type == null) {
