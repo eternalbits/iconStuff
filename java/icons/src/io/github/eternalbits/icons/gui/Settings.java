@@ -48,6 +48,7 @@ class Settings implements Serializable {
 	
 	// ICNS dialog
 	boolean warnSaveNonStandard = false;
+	String convertJpegToPng = null;
 	
 	// ICO dialog
 	boolean ignoreIconsLarger256 = true;

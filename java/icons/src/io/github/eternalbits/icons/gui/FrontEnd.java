@@ -248,8 +248,6 @@ public class FrontEnd extends JFrame {
 				super.approveSelection();
 			}
 		};
-		chooser.setFileFilter(new FileNameExtensionFilter
-				(res.getString("accept_disk"), "ico", "icns", "png", "lnk"));
 	}
 	
 	/**
@@ -373,7 +371,7 @@ public class FrontEnd extends JFrame {
 				}
 			}
 			
-			try (DiskIcons image = DiskImage.open(file, "r")) {
+			try (DiskIcons image = DiskImage.open(file, "r", settings.convertJpegToPng)) {
 
 				listData.addElement(new ListItem(this, image, file));
 				list.setSelectedIndex(listData.getSize() - 1);
@@ -402,7 +400,7 @@ public class FrontEnd extends JFrame {
 	void refreshThis(int i) {
 		File file = listData.get(i).getFile();
 		
-		try (DiskIcons image = DiskImage.open(file, "r")) {
+		try (DiskIcons image = DiskImage.open(file, "r", settings.convertJpegToPng)) {
 			listData.set(i, new ListItem(this, image, file));
 			list.setSelectedIndex(i);
 			updateDiskIcon();
@@ -540,7 +538,7 @@ public class FrontEnd extends JFrame {
 		openButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				openDiskIcon();
+				openDisksIcon();
 			}
 		});
 		
@@ -608,7 +606,10 @@ public class FrontEnd extends JFrame {
 		
 	}
 
-	private void openDiskIcon() {
+	/**
+	 *  Opens a file from the ico, icns, png, jp2, and lnk list.
+	 */
+	private void openDisksIcon() {
 		if (settings.filterImageFiles) {
 			dialog.setFile(isWindows ? WINDOWS_FILE_FILTER : null);
 			dialog.setTitle(res.getString("open_msg"));
@@ -616,6 +617,9 @@ public class FrontEnd extends JFrame {
 			dialog.setMultipleMode(true);
 			dialog.setVisible(true);
 		} else {
+			if (chooser.getChoosableFileFilters().length == 1)
+				chooser.setFileFilter(new FileNameExtensionFilter(res.getString("accept_disk"), 
+						"ico", "icns", "png", "jp2", "lnk"));
 			chooser.setDialogTitle(res.getString("open_msg"));
 			chooser.setMultiSelectionEnabled(true);
 			if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
@@ -623,6 +627,30 @@ public class FrontEnd extends JFrame {
 		}
 		for (File file : settings.filterImageFiles ? dialog.getFiles() : chooser.getSelectedFiles()) {
 			addToList(file);
+		}
+	}
+	
+	/**
+	 *  Open any file.
+	 * 
+	 * @param	settings_filterImageFiles	Current filterImageFiles.
+	 * @return	The file to be opened, or {@code null} if none is selected.
+	 */
+	File openDiskIcon(boolean settings_filterImageFiles) {
+		if (settings_filterImageFiles) {
+			dialog.setFilenameFilter(null);
+			dialog.setTitle(res.getString("open_msg"));
+			dialog.setMode(FileDialog.LOAD);
+			dialog.setVisible(true);
+			if (dialog.getFiles().length == 0)
+				return null;
+			return dialog.getFiles()[0];
+		} else {
+			chooser.resetChoosableFileFilters();
+			chooser.setDialogTitle(res.getString("open_msg"));
+			if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
+				return null;
+			return chooser.getSelectedFile();
 		}
 	}
 	

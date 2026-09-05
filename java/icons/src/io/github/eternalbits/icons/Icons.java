@@ -56,8 +56,8 @@ public class Icons {
 	 * 
 	 * @param file	File we want to get a --dump of.
 	 */
-	private void showView(File file) throws IOException {
-		try (DiskIcons image = DiskImage.open(file, "r")) {
+	private void showView(File file, String jpeg) throws IOException {
+		try (DiskIcons image = DiskImage.open(file, "r", jpeg)) {
 			dump(image.getShow());
 		}
 	}
@@ -70,11 +70,11 @@ public class Icons {
 	 * @param type	Extension type: ico, icns or png.
 	 * @param icon	A list with the icon and output.
 	 */
-	private void copy(File from, File to, String type, String icon) throws IOException, WrongHeaderException {
+	private void copy(File from, File to, String type, String icon, String jpeg) throws IOException, WrongHeaderException {
 	//	File copy logic to better handle file deletion and reporting when icon creation fails
 		boolean save = from.getPath().equals(to.getPath());
 		Boolean done = null;
-		try (DiskIcons image = DiskImage.open(from, "r")) {
+		try (DiskIcons image = DiskImage.open(from, "r", jpeg)) {
 			try (DiskIcons clone = DiskImage.create(type, to, image, icon)) {
 				done = clone.done;	// done open by DiskImage
 			} catch (IOException e) {
@@ -174,6 +174,7 @@ public class Icons {
 		options.addOption(Option.builder("w").longOpt("write").desc("set <out> as destination file for copy").hasArgs().argName("out").build());
 		options.addOption(Option.builder("f").longOpt("format").desc("copy output format: ICNS, ICO, PNG or JP2").hasArgs().argName("fmt").build());
 		options.addOption(Option.builder("i").longOpt("icon").desc("a list with the icon and output").hasArgs().argName("ico").build());
+		options.addOption(Option.builder("j").longOpt("jpeg").desc("program to convert JPEG 2000 to PNG").hasArgs().argName("app").build());
 		options.addOption(Option.builder("o").longOpt("overwrite").desc("overwrite existing file on copy").build());
 		return options;
 	}
@@ -240,8 +241,11 @@ public class Icons {
 				
 				if (cmd.hasOption("i") && cmd.getOptionValues("i").length != 1)
 					throw new ParseException(String.format(TOO_MANY_OPTIONS, "i"));
-								
-				copy(from, to, f, cmd.getOptionValue("i"));
+				
+				if (cmd.hasOption("j") && cmd.getOptionValues("j").length != 1)
+					throw new ParseException(String.format(TOO_MANY_OPTIONS, "j"));
+				
+				copy(from, to, f, cmd.getOptionValue("i"), cmd.getOptionValue("j"));
 				return;
 			}
 			
@@ -249,7 +253,7 @@ public class Icons {
 				throw new ParseException(INCORRECT_COMMAND);
 			
 			if (cmd.hasOption("d")) {
-				showView(getOptionValues(cmd, "d"));
+				showView(getOptionValues(cmd, "d"), cmd.getOptionValue("j"));
 				return;
 			}
 			

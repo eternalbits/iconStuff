@@ -69,14 +69,14 @@ public class IcnsFiles extends DiskIcons {
 	 * @param file	Read access to ICNS file.
 	 * @param mode	String meaning file access.
 	 */
-	public IcnsFiles(File file, String mode) throws IOException, WrongHeaderException {
+	public IcnsFiles(File file, String mode, String jpeg) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, mode);
 		try { // Always close media on Exception
 			path = file.getPath();
 			length = file.length();
 			setType();
 			
-			header = new IcnsHeader(this, readIcon(0, IcnsHeader.HEADER_SIZE));
+			header = new IcnsHeader(this, readIcon(0, IcnsHeader.HEADER_SIZE), jpeg);
 		}
 		catch (Exception e) {
 			media.close();

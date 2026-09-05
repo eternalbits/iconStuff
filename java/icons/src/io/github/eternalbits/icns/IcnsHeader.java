@@ -340,7 +340,7 @@ class IcnsHeader {
 	 * Apple ICNS file reading routine.
 	 * <p>
 	 */
-	IcnsHeader(IcnsFiles icns, ByteBuffer in) throws IOException, IOException, WrongHeaderException {
+	IcnsHeader(IcnsFiles icns, ByteBuffer in, String jpeg) throws IOException, IOException, WrongHeaderException {
 		img = new PngHeader();
 		app = new AppHeader();
 		jp2 = new Jp2Header();
@@ -381,7 +381,7 @@ class IcnsHeader {
 					} 
 					else 
 					if (tr.limit() >= 16 && tr.getInt(8) == 12 && tr.getInt(12) == IcnsFiles.ICON_JPEG) { // jP: JPEG 2000
-						jp2.JpegToPng(icns, view);
+						jp2.JpegToPng(icns, view, jpeg);
 					} 
 					else 
 					if (view.type.equals("is32") || view.type.equals("il32") || view.type.equals("ih32") || view.type.equals("it32") 

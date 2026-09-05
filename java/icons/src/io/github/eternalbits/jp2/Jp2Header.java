@@ -17,11 +17,13 @@
 package io.github.eternalbits.jp2;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.ImageIcon;
 
@@ -31,6 +33,7 @@ import io.github.eternalbits.disk.DiskImageView;
 import io.github.eternalbits.disk.WrongHeaderException;
 import io.github.eternalbits.icons.Static;
 import io.github.eternalbits.icons.gui.FrontEnd;
+import io.github.eternalbits.png.PngFiles;
 
 /**
  * JPEG 2000 File Routine
@@ -88,7 +91,7 @@ class Jp2Header {
 	 * @param jp2	JP2 file access.
 	 * @param in	Access to the first 12 characters.
 	 */
-	public Jp2Header(Jp2Files jp2, ByteBuffer in) throws IOException, WrongHeaderException {
+	public Jp2Header(Jp2Files jp2, ByteBuffer in, String jpeg) throws IOException, WrongHeaderException {
 		
 		if (in.remaining() >= HEADER_SIZE) {
 			in.order(Jp2Files.BYTE_ORDER);
@@ -102,7 +105,7 @@ class Jp2Header {
 				view.offset = 0;
 				view.length = (int) jp2.getLength();
 				view.type = jp2.getType();
-				JpegToPng(jp2, view);
+				JpegToPng(jp2, view, jpeg);
 				disk.add(view);
 				return;
 			}
@@ -164,19 +167,53 @@ class Jp2Header {
 	}
 	
 	/**
-	 * A program that displays a question mark.
+	 * A program that displays a question mark or converts a JPEG 2000 image to PNG.
 	 * 
 	 * @param img	Access to each of the 2 routines: ICNS and JP2.
 	 * @param view	A read and write view of a {@link DiskImageView}.
+	 * @param jpeg	Program that converts JPEG 2000 to PNG. If the program is null, an image
+	 *  with a question mark will be displayed, as Java does not recognize a standard reading 
+	 *  routine. If filled in, only a JPEG 2000 to PNG conversion routine, published by 
+	 *  <a href="https://www.xnview.com/en/nconvert">XnSoft</a>, will be recognized.
 	 */
-	public void JpegToPng(DiskIcons img, DiskIconsView view) throws IOException, WrongHeaderException {
+	public void JpegToPng(DiskIcons img, DiskIconsView view, String jpeg) throws IOException, WrongHeaderException {
 		view.isIcon = DiskIcons.ICON_JP2;
 		view.description = ImageHeader(img, view.offset, view.length);
 		view.layout = view.description.replaceFirst("JPEG 2000", "JP2");
-		ImageIcon icon = new ImageIcon(FrontEnd.getResource("jpeg2.png"));
-		view.image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-		view.image.getGraphics().drawImage(icon.getImage(), 0, 0, null);
-		view.jpeg2 = createJp2(img, view.offset, view.length);
+		boolean done = false;
+		if (jpeg != null && new File(jpeg).canExecute()) {
+			String name = Static.getWorkingDirectory().getPath() + File.separator + UUID.randomUUID().toString() + ".png";
+			if (!new File(name).exists()) {
+				try {
+					String width = Static.getSize(view.layout), height = width;
+					if (height.contains("x")) height = height.split("x")[1];
+					if (width.contains("x")) width = width.split("x")[0];
+					Process proc = new ProcessBuilder(jpeg, "-out", "png", "-clevel", "9", 
+							"-thumb", width, height, "-o", name, img.getPath()).start();
+					proc.waitFor();
+					
+					File file = new File(name);
+					DiskIcons png = new PngFiles(file, "r");
+					DiskIconsView ps = png.getView().fileIcons.get(0);
+					view.isIcon		= ps.isIcon;
+					view.description= ps.description;
+					view.layout		= ps.layout;
+					view.image		= ps.image;
+					png.close();
+					
+					file.delete();
+					done = true;
+				} catch (IOException | InterruptedException | WrongHeaderException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		if (!done) {
+			ImageIcon icon = new ImageIcon(FrontEnd.getResource("jpeg2.png"));
+			view.image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+			view.image.getGraphics().drawImage(icon.getImage(), 0, 0, null);
+			view.jpeg2 = createJp2(img, view.offset, view.length);
+		}
 	}
 	
 	/**

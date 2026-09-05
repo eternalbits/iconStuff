@@ -66,14 +66,14 @@ public class Jp2Files extends DiskIcons {
 	 * @param file	Read access to JP2 file.
 	 * @param mode	String meaning file access.
 	 */
-	public Jp2Files(File file, String mode) throws IOException, WrongHeaderException {
+	public Jp2Files(File file, String mode, String jpeg) throws IOException, WrongHeaderException {
 		media = new RandomAccessFile(file, mode);
 		try { // Always close media on Exception
 			path = file.getPath();
 			length = file.length();
 			setType();
 			
-			header = new Jp2Header(this, readIcon(0, Jp2Header.HEADER_SIZE));
+			header = new Jp2Header(this, readIcon(0, Jp2Header.HEADER_SIZE), jpeg);
 		}
 		catch (Exception e) {
 			media.close();

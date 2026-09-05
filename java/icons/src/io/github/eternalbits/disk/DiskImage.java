@@ -40,23 +40,23 @@ public class DiskImage {
 	 * @param path/file	String/path you want to access DiskIcons.
 	 * @param mode	Access type: "r" for read or "rw" for both.
 	 */
-	public static DiskIcons open(String path, String mode) throws IOException {
-		return open(new File(path), mode);
+	public static DiskIcons open(String path, String mode, String jpeg) throws IOException {
+		return open(new File(path), mode, jpeg);
 	}
 
-	public static DiskIcons open(File file, String mode) throws IOException {
+	public static DiskIcons open(File file, String mode, String jpeg) throws IOException {
 		
 		if (file.length() >= 4) {
 			try (RandomAccessFile media = new RandomAccessFile(file, "r")) {
 				switch (media.readInt()) {
 				case IcnsFiles.ICON_ICNS:							// 'icns' for ICNS
-					return new IcnsFiles(file, mode);
+					return new IcnsFiles(file, mode, jpeg);
 				case IcoFiles.ICON_ICO:								// '....' for ICO
 					return new IcoFiles(file, mode);
 				case PngFiles.ICON_PGN:								// '%PNG' for PNG
 					return new PngFiles(file, mode);
 				case Jp2Files.ICON_JP2:								// '....' for JP2
-					return new Jp2Files(file, mode);
+					return new Jp2Files(file, mode, jpeg);
 				}
 			} catch (WrongHeaderException e) {}
 		}

@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.net.URI;
 import java.util.Locale;
 
@@ -34,6 +35,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -48,6 +51,7 @@ class SettingsDialog extends JDialog {
 	private final JCheckBox iconsDescendingOrder;
 	
 	private final JCheckBox warnSaveNonStandard;
+	private final JTextField convertJpegToPng;
 	
 	private final JCheckBox ignoreIconsLarger256;
 	private final JCheckBox ignoreDuplicateIcons;
@@ -120,6 +124,9 @@ class SettingsDialog extends JDialog {
 		Box icns = Box.createVerticalBox();
 		icns.setBorder(new TitledBorder(boxBorder, app.res.getString("set_icns")));
 		icns.add(warnSaveNonStandard = new JCheckBox(app.res.getString("set_icns_non_standard"), app.settings.warnSaveNonStandard));
+		icns.add(convertJpegToPng	 = new JTextField(app.settings.convertJpegToPng == null ? 
+				app.res.getString("set_convert_jpeg_to_png") : app.settings.convertJpegToPng));
+		convertJpegToPng.setToolTipText(app.res.getString("set_tool_jpeg_to_png"));
 		
 		Box ico = Box.createVerticalBox();
 		ico.setBorder(new TitledBorder(boxBorder, app.res.getString("set_ico")));
@@ -157,6 +164,8 @@ class SettingsDialog extends JDialog {
 				app.settings.uncheckUsingSaveAs 	= uncheckUsingSaveAs.isSelected();
 				app.settings.iconsDescendingOrder 	= iconsDescendingOrder.isSelected();
 				app.settings.warnSaveNonStandard 	= warnSaveNonStandard.isSelected();
+				app.settings.convertJpegToPng		= convertJpegToPng.getText().isBlank() || convertJpegToPng.getText().
+						equals(app.res.getString("set_convert_jpeg_to_png")) ? null : convertJpegToPng.getText();
 				app.settings.ignoreIconsLarger256 	= ignoreIconsLarger256.isSelected();
 				app.settings.ignoreDuplicateIcons 	= ignoreDuplicateIcons.isSelected();
 				dispose();
@@ -178,6 +187,17 @@ class SettingsDialog extends JDialog {
 		getContentPane().add(icns, gbc);
 		getContentPane().add(ico, gbc);
 		getContentPane().add(cmd, gbc);
+		
+		convertJpegToPng.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+					File file = app.openDiskIcon(filterImageFiles.isSelected());
+					if (file != null)
+						convertJpegToPng.setText(file.getPath());
+				}
+			}
+		});
 		
 		pack();
 		setLocationRelativeTo(app);
