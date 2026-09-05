@@ -69,7 +69,7 @@ class ImageCanvas extends JPanel {
 	ImageCanvas(FrontEnd frontEnd) {
 		app = frontEnd;
 		setLayout(new BorderLayout());
-		allCombo = app.isMac? 93: 72;
+		allCombo = System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0? 93: 72;
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		add(scroll, BorderLayout.CENTER);
