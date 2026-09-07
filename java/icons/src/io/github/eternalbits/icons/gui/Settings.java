@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Locale;
 
 import io.github.eternalbits.icons.Static;
@@ -45,6 +46,7 @@ class Settings implements Serializable {
 	boolean warnSaveOperation = false;
 	boolean uncheckUsingSaveAs = false;
 	boolean iconsDescendingOrder = true;
+	LocalDate instantOfDate = null;
 	
 	// ICNS dialog
 	boolean warnSaveNonStandard = false;
