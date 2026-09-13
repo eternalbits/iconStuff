@@ -289,7 +289,7 @@ public class FrontEnd extends JFrame {
 				HttpClient client = HttpClient.newHttpClient();
 				HttpRequest request = HttpRequest.newBuilder(URI.create(uri)).build();
 				HttpResponse<?> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-				if (response.statusCode() != 302) 
+				if (response.statusCode() != 302) // The resource temporarily lives at a different URI
 					return;
 				Optional<String> location = response.headers().firstValue("location");
 				if (location.isPresent() && !location.get().endsWith("/v1.7")) {

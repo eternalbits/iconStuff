@@ -16,12 +16,11 @@ functions have this tool, [`Microsoft's bitmap`](https://github.com/eternalbits/
 that is present in ICO and [`Apple's compression`](https://github.com/eternalbits/iconStuff/tree/main/java/icons/src/io/github/eternalbits/apple/) 
 that is present in ICNS.
 
-The app finally has [a window](https://github.com/eternalbits/iconStuff/releases)!
-Check it out 😎
-
-The --icon parameter means a format of choice for your icons.
+More recent versions allow manipulation of the JPEG 2000 (JP2) icon, which will be [discussed here](https://github.com/eternalbits/iconStuff/tree/main/java/).
 
 Both files can be viewed with the [XnView MP](https://www.xnview.com/en/xnviewmp/) tool.
+
+When requested using parameters, the --icon parameter means a format of choice for your icons.
 
 #### Microsoft's ICO
 `--icon 2=bit;3=*;4=64:bit;?=48:bit;?=24:bit`
