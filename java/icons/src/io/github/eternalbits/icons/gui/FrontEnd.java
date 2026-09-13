@@ -292,7 +292,7 @@ public class FrontEnd extends JFrame {
 				if (response.statusCode() != 302) // The resource temporarily lives at a different URI
 					return;
 				Optional<String> location = response.headers().firstValue("location");
-				if (location.isPresent() && !location.get().endsWith("/v1.7")) {
+				if (location.isPresent() && !location.get().endsWith("/v1.8")) {
 					Desktop.getDesktop().browse(new URI(uri));
 				}
 			} catch (IOException | InterruptedException | URISyntaxException e) {
