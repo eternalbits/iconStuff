@@ -195,8 +195,8 @@ class ImageItem extends JPanel {
 	 */
 	void setComponentPopupMenu() {
 		final JPopupMenu popup = new JPopupMenu();
-		final JMenuItem copy = new JMenuItem(app.res.getString("copy"));
-		final JMenuItem delete = new JMenuItem(app.res.getString("delete"));
+		final JMenuItem copy = app.setMenuItem("copy");
+		final JMenuItem delete = app.setMenuItem("delete");
 		
 		copy.setEnabled(!jp2);
 		popup.add(copy);

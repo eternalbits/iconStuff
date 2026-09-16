@@ -173,7 +173,7 @@ class ImageCanvas extends JPanel {
 	 * @param popup	The name of the menu.
 	 */
 	void pasteComponentPopupMenu(JPopupMenu popup) {
-		paste = new JMenuItem(app.res.getString("paste"));
+		paste = app.setMenuItem("paste");
 		
 		Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
 		paste.setEnabled(t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor));
@@ -210,8 +210,8 @@ class ImageCanvas extends JPanel {
 	 * @param popup	The name of the menu.
 	 */
 	void adjustComponentPopupMenu(JPopupMenu popup) {
-		final JMenuItem refresh = new JMenuItem(app.res.getString("refresh"));
-		final JMenuItem close = new JMenuItem(app.res.getString("close"));
+		final JMenuItem refresh = app.setMenuItem("refresh");
+		final JMenuItem close = app.setMenuItem("close");
 		
 		popup.add(new JSeparator());
 		popup.add(refresh);

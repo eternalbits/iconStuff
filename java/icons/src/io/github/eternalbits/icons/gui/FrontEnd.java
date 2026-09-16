@@ -59,6 +59,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -462,6 +463,16 @@ public class FrontEnd extends JFrame {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * A JMenuItem with minor changes
+	 */
+	JMenuItem setMenuItem(String text) {
+		final JMenuItem item = new JMenuItem("  "+res.getString(text));
+		item.setIcon(new ImageIcon(getResource(text+".png")));
+		item.setMargin(new Insets(2, -22, 2, 2));
+		return item;
 	}
 	
 	/**
