@@ -135,7 +135,7 @@ public class Static {
 		BufferedImage max = null;	// Try to save the largest number
 		int m = -1;
 		for (DiskIconsView fs: image.getFiles()) {
-			if (fs.layout != null && getInteger(fs.layout) > m) {
+			if (fs.image != null && fs.layout != null && getInteger(fs.layout) > m) {
 				m = getInteger(fs.layout);
 				max = fs.image;
 			}
