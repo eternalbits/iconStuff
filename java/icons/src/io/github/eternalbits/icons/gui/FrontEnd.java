@@ -103,7 +103,7 @@ public class FrontEnd extends JFrame {
 	private JButton aboutButton = null;
 	
 	private ImageIcon iconSave = new ImageIcon(getResource("save.png"));
-	private ImageIcon iconUndo = new ImageIcon(getResource("undo.png"));
+	private ImageIcon iconUndo = new ImageIcon(getResource("untie.png"));
 	
 	final DefaultListModel<ListItem> listData = new DefaultListModel<ListItem>();
 	final JList<ListItem> list = new JList<ListItem>(listData);
@@ -471,7 +471,7 @@ public class FrontEnd extends JFrame {
 	JMenuItem setMenuItem(String text) {
 		final JMenuItem item = new JMenuItem("  "+res.getString(text));
 		item.setIcon(new ImageIcon(getResource(text+".png")));
-		item.setMargin(new Insets(2, -22, 2, 2));
+		item.setMargin(new Insets(2, 2, 2, 2));
 		return item;
 	}
 	
