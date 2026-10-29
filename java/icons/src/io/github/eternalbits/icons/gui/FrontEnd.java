@@ -652,7 +652,7 @@ public class FrontEnd extends JFrame {
 	}
 
 	/**
-	 *  Opens a file from the ico, icns, png, jp2, and lnk list.
+	 *  Opens a selection file.
 	 */
 	private void openDisksIcon() {
 		if (settings.filterImageFiles) {
@@ -662,9 +662,7 @@ public class FrontEnd extends JFrame {
 			dialog.setMultipleMode(true);
 			dialog.setVisible(true);
 		} else {
-			if (chooser.getChoosableFileFilters().length == 1)
-				chooser.setFileFilter(new FileNameExtensionFilter(res.getString("accept_disk"), 
-						"ico", "icns", "png", "jp2", "lnk"));
+			selectDisksIcon();
 			chooser.setDialogTitle(res.getString("open_msg"));
 			chooser.setMultiSelectionEnabled(true);
 			if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
@@ -673,6 +671,15 @@ public class FrontEnd extends JFrame {
 		for (File file : settings.filterImageFiles ? dialog.getFiles() : chooser.getSelectedFiles()) {
 			addToList(file);
 		}
+	}
+
+	/**
+	 *  Select a file from the ico, icns, png, jp2, and lnk list.
+	 */
+	private void selectDisksIcon() {
+		if (chooser.getChoosableFileFilters().length == 1)
+			chooser.setFileFilter(new FileNameExtensionFilter(res.getString("accept_disk"), 
+					"ico", "icns", "png", "jp2", "lnk"));
 	}
 	
 	/**
@@ -746,6 +753,7 @@ public class FrontEnd extends JFrame {
 					return;
 				file = new File(dialog.getDirectory(), dialog.getFile());
 			} else {
+				selectDisksIcon();
 				chooser.setSelectedFile(new File(target));
 				chooser.setDialogTitle(res.getString("save_as_msg"));
 				chooser.setMultiSelectionEnabled(false);
