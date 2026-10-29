@@ -106,6 +106,7 @@ class Jp2Header {
 				view.length = (int) jp2.getLength();
 				view.type = jp2.getType();
 				JpegToPng(jp2, view, jpeg);
+				view.i = disk.size();
 				disk.add(view);
 				return;
 			}

@@ -371,6 +371,7 @@ class IcnsHeader {
 					view.length = length - 8;
 					view.type = new String(type);
 					view.description = OSType(view.type);
+					view.i = disk.size();
 					
 					tr.order(ByteOrder.BIG_ENDIAN);
 					if (tr.limit() >= 16 && tr.getInt(8) == PngFiles.ICON_PGN && tr.getInt(12) == PngFiles.DOS_UNIX) { // %PNG....

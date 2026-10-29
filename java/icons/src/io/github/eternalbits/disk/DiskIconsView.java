@@ -26,6 +26,7 @@ import io.github.eternalbits.icons.Static;
  */
 public class DiskIconsView implements Comparable<DiskIconsView> {
 	
+	public int				i;					// This is the index
 	public int				isIcon;				// This is the input icon type that goes from NOT_AN_ICON to ICON_ARGB
 	public int				forIcon;			// This is the output icon type which is PNG, BITMAP, APPLE, MASK, ARGB, JP2
 	public int				offset;				// The offset goes from the beginning of the file to the beginning of the icon

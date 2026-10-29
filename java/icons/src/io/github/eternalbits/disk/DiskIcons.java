@@ -69,12 +69,15 @@ public abstract class DiskIcons implements AutoCloseable {
 		return length;
 	}
 	
-	protected boolean undo = false;						// The current position (undo number).
-	public boolean getUndo() {
-		return undo;
+	protected DiskStatus status = new DiskStatus();		// A simple undo/redo for actions in java.
+	public DiskStatus getStatus() {						// Value of the item before and after the respective change
+		return status;
 	}
-	public void setUndo(boolean undo) {
-		this.undo = undo;
+	public boolean getUndo() {							// The current position (undo number).
+		return status.canUndo();
+	}
+	public void clear() {								// Item value without changes
+		status.clear();
 	}
 	
 	/**

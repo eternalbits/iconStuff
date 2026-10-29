@@ -192,6 +192,7 @@ class IcoHeader {
 					view.length = size;
 					view.type = ico.getType();
 					view.description = dirEntry();
+					view.i = disk.size();
 					
 					tr = ico.readIcon(position, 8).order(ByteOrder.BIG_ENDIAN);
 					if (tr.limit() >= 8 && tr.getInt(0) == PngFiles.ICON_PGN && tr.getInt(4) == PngFiles.DOS_UNIX) { // %PNG....

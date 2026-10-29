@@ -109,6 +109,7 @@ class PngHeader {
 				view.description = this.ImageHeader(png, HEADER_SIZE, view.length - HEADER_SIZE);
 				view.image = this.createPng(png, view.offset, view.length);
 				view.layout = view.description;
+				view.i = disk.size();
 				disk.add(view);
 				return;
 			}

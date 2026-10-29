@@ -43,16 +43,25 @@ import javax.swing.SwingUtilities;
 
 import io.github.eternalbits.disk.DiskIcons;
 import io.github.eternalbits.disk.DiskIconsView;
+import io.github.eternalbits.disk.DiskStatus.Status;
 import io.github.eternalbits.icons.Static;
 
 class ImageCanvas extends JPanel {
 	private static final long serialVersionUID = 4983591518692183668L;
+	private static final int COPY_FULL = -1;
+	static final int COPY_DELETE = 0;
+	static final int COPY_TYPE = 1;
+	static final int COPY_SIZE = 2;
+	static final int COPY_ICON = 3;
 	
 	private final JPanel panel = new JPanel();
 	private final JScrollPane scroll = new JScrollPane(panel);
 	private List<DiskIconsView> local = new ArrayList<DiskIconsView>();
 	
+	private JMenuItem undo = new JMenuItem();
+	private JMenuItem redo = new JMenuItem();
 	JMenuItem paste = new JMenuItem();
+	
 	private ImageItem[] ic_item;
 	private String icon = null;
 	
@@ -149,8 +158,9 @@ class ImageCanvas extends JPanel {
 	 */
 	void setComponentPopupMenu() {
 		final JPopupMenu popup = new JPopupMenu();
+		initialComponentPopupMenu(popup);
 		pasteComponentPopupMenu(popup);
-		adjustComponentPopupMenu(popup);
+		finalComponentPopupMenu(popup);
 		panel.setComponentPopupMenu(popup);
 		if (!app.isWindows) {
 			for (int i = 0; i < local.size(); i++) {
@@ -172,6 +182,81 @@ class ImageCanvas extends JPanel {
 	 * 
 	 * @param popup	The name of the menu.
 	 */
+	void initialComponentPopupMenu(JPopupMenu popup) {
+		undo = app.setMenuItem("undo");
+		redo = app.setMenuItem("redo");
+		
+		undo.setEnabled(image==null? false: image.getImage().getStatus().canUndo());
+		redo.setEnabled(image==null? false: image.getImage().getStatus().canRedo());
+		popup.add(undo);
+		popup.add(redo);
+		popup.add(new JSeparator());
+		
+		undo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Status edit = image.getImage().getStatus().setUndo();
+				if (edit != null) {
+					DiskIconsView fs = image.getView().fileIcons.get(edit.i);
+					switch (edit.copy) {
+					case COPY_FULL:
+						fs.isIcon = DiskIcons.NOT_AN_ICON;
+						break;
+					case COPY_DELETE:
+						fs.isIcon = Integer.parseInt(edit.previous);
+						break;
+					case COPY_TYPE:
+						fs.type = edit.previous;
+						break;
+					case COPY_SIZE:
+						fs.size = Integer.parseInt(edit.previous);
+						break;
+					case COPY_ICON:
+						fs.layout = edit.previous;
+						break;
+					}
+					doRepaint(image);
+					app.saveButton();
+				}
+			}
+		});
+		
+		redo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Status edit = image.getImage().getStatus().setRedo();
+				if (edit != null) {
+					DiskIconsView fs = image.getView().fileIcons.get(edit.i);
+					switch (edit.copy) {
+					case COPY_FULL:
+						fs.isIcon = DiskIcons.ICON_PNG;
+						break;
+					case COPY_DELETE:
+						fs.isIcon = Integer.parseInt(edit.current);
+						break;
+					case COPY_TYPE:
+						fs.type = edit.current;
+						break;
+					case COPY_SIZE:
+						fs.size = Integer.parseInt(edit.current);
+						break;
+					case COPY_ICON:
+						fs.layout = edit.current;
+						break;
+					}
+					doRepaint(image);
+					app.saveButton();
+				}
+			}
+		});
+		
+	}
+	
+	/**
+	 * Adjust the PopupMenu with its dependencies under the ImageCanvas source
+	 * 
+	 * @param popup	The name of the menu.
+	 */
 	void pasteComponentPopupMenu(JPopupMenu popup) {
 		paste = app.setMenuItem("paste");
 		
@@ -186,6 +271,7 @@ class ImageCanvas extends JPanel {
 				if (t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
 					try {
 						DiskIconsView fs = new DiskIconsView();
+						fs.i = image.getView().fileIcons.size();
 						fs.image = (BufferedImage) t.getTransferData(DataFlavor.imageFlavor);
 						fs.layout = fs.image == null? null: fs.image.getWidth() + (fs.image.getWidth() != 
 								fs.image.getHeight()? "x" + fs.image.getHeight(): "") + " PNG";
@@ -193,8 +279,9 @@ class ImageCanvas extends JPanel {
 						fs.isIcon = DiskIcons.ICON_PNG;
 						fs.type = "PNG";
 						image.putIcon(fs);
-						image.setUndo(true);
 						doRepaint(image);
+						image.setStatus(fs.i, COPY_FULL, null, null);
+						app.saveButton();
 						
 					} catch (UnsupportedFlavorException | IOException p) {
 						p.printStackTrace();
@@ -209,7 +296,7 @@ class ImageCanvas extends JPanel {
 	 * 
 	 * @param popup	The name of the menu.
 	 */
-	void adjustComponentPopupMenu(JPopupMenu popup) {
+	void finalComponentPopupMenu(JPopupMenu popup) {
 		final JMenuItem refresh = app.setMenuItem("refresh");
 		final JMenuItem close = app.setMenuItem("close");
 		

@@ -529,7 +529,7 @@ public class FrontEnd extends JFrame {
 		if (s != -1) saveButton(s);
 	}
 	private void saveButton(int s) {
-		boolean undo = listData.get(s).getUndo();
+		boolean undo = listData.get(s).getImage().getUndo();
 		saveButton.setIcon(undo? iconUndo: iconSave);
 		saveButton.setEnabled(undo);
 	}

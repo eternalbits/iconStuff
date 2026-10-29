@@ -59,16 +59,16 @@ class ListItem {
 		image.putIcon(fs);
 	}
 	
+	DiskIcons getImage() {
+		return image;
+	}
+	
 	File getFile() {
 		return file;
 	}
 	
-	boolean getUndo() {
-		return image.getUndo();
-	}
-	void setUndo(boolean undo) {
-		image.setUndo(undo);
-		app.saveButton();
+	int setStatus(int i, int copy, String previous, String current) {
+		return image.getStatus().setStatus(i, copy, previous, current);
 	}
 	
 	/**
@@ -132,7 +132,7 @@ class ListItem {
 		try (DiskIcons clone = DiskImage.create(type, to, image, type.toLowerCase().equals("ico") ? icon : null)) {
 			done = clone.done;	// done open by DiskImage
 			if (save) 
-				image.setUndo(false);
+				image.clear();
 		} catch (IOException | WrongHeaderException e) {
 			JOptionPane.showMessageDialog(app, 
 					String.format(app.res.getString("image_abnormal")+" "+app.res.getString("image_not_"+result)), 

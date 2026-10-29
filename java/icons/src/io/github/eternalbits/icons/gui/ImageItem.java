@@ -92,8 +92,9 @@ class ImageItem extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String fs_type = String.valueOf(cb_type.getSelectedItem());
 				if (!fs.type.equals(fs_type)) {
+					image.setStatus(fs.i, ImageCanvas.COPY_TYPE, fs.type, fs_type);
 					fs.type = fs_type;
-					image.setUndo(true);
+					app.saveButton();
 				}
 			}
         });
@@ -102,9 +103,10 @@ class ImageItem extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String fs_size = String.valueOf(cb_size.getSelectedItem());
 				if (!Integer.toString(fs.size).equals(fs_size)) {
+					image.setStatus(fs.i, ImageCanvas.COPY_SIZE, Integer.toString(fs.size), fs_size);
 					fs.size = Integer.parseInt(fs_size);
 					canvas.doRepaint(image);
-					image.setUndo(true);
+					app.saveButton();
 				}
 			}
         });
@@ -113,9 +115,10 @@ class ImageItem extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String fs_layout = Static.getSize(fs.layout)+" "+cb_icon.getSelectedItem();
 				if (!fs.layout.equals(fs_layout)) {
+					image.setStatus(fs.i, ImageCanvas.COPY_ICON, fs.layout, fs_layout);
 					fs.layout = fs_layout;
 					canvas.doRepaint(image);
-					image.setUndo(true);
+					app.saveButton();
 				}
 			}
         });
@@ -198,11 +201,12 @@ class ImageItem extends JPanel {
 		final JMenuItem copy = app.setMenuItem("copy");
 		final JMenuItem delete = app.setMenuItem("delete");
 		
+		canvas.initialComponentPopupMenu(popup);
 		copy.setEnabled(!jp2);
 		popup.add(copy);
 		canvas.pasteComponentPopupMenu(popup);
 		popup.add(delete);
-		canvas.adjustComponentPopupMenu(popup);
+		canvas.finalComponentPopupMenu(popup);
 		setComponentPopupMenu(popup);
 		
 		copy.addActionListener(new ActionListener() {
@@ -225,9 +229,10 @@ class ImageItem extends JPanel {
 		delete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				image.setStatus(fs.i, ImageCanvas.COPY_DELETE, Integer.toString(fs.isIcon), Integer.toString(DiskIcons.NOT_AN_ICON));
 				fs.isIcon = DiskIcons.NOT_AN_ICON;
 				canvas.doRepaint(image);
-				image.setUndo(true);
+				app.saveButton();
 			}
 		});
 		
